@@ -13,9 +13,16 @@ config.read("token.ini")
 async def on_read():
     print("Client logged in")
 
+### Misc. Commands ###
+
 @my_bot.command()
 async def ping(*args):
     return await my_bot.say("Pong!")
+
+@my_bot.command()
+async def about(*args):
+    return await my_bot.say("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
+
 
 ### Rule Commands ###
 
