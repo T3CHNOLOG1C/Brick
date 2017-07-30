@@ -63,5 +63,9 @@ async def gudie(*args):
 @my_bot.command()
 async def rip(*args):
     return await my_bot.say("Press F to pay respects.")
+    
+@my_bot.command()
+async def t3ch(*Args):
+		return await my_bot.say("https://i.imgur.com/4kANai8.png")
 
 my_bot.run(config['Main']['token']) 
