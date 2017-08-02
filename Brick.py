@@ -43,10 +43,10 @@ async def on_message(message):
 
 ### Admin Commands ###
 
-@my_bot.commands.has_permissions(kick_members=True)
 @my_bot.command()
-async def permtest(*args):
-    return await my_bot.say("permtest")
+@commands.has_role('Staff')
+async def staffcmd():
+    return await my_bot.say("test.")
 
 ### Meme Commands ###
 
