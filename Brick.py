@@ -40,7 +40,14 @@ rules = {
 async def on_message(message):
     if message.content.lower()[len(bot_prefix):] in rules:
         await my_bot.send_message(message.channel, rules[message.content.lower()[len(bot_prefix):]])
-        
+
+### Admin Commands ###
+
+@my_bot.commands.has_permissions(kick_members=True)
+@my_bot.command()
+async def permtest(*args):
+    return await my_bot.say("permtest")
+
 ### Meme Commands ###
 
 @my_bot.command()
