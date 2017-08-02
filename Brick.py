@@ -43,9 +43,9 @@ async def on_message(message):
 
 ### Admin Commands ###
 
-@my_bot.command()
 @commands.has_role('Staff')
-async def staffcmd():
+@my_bot.command()
+async def staffcmd(ctx):
     return await my_bot.say("test.")
 
 ### Meme Commands ###
