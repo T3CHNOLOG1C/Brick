@@ -43,9 +43,9 @@ async def on_message(message):
 
 ### Admin Commands ###
 
-@commands.has_role('Staff')
+@commands.has_permissions(kick_members=True)
 @my_bot.command()
-async def staffcmd(ctx):
+async def kickperm(*Args):
     return await my_bot.say("test.")
 
 ### Meme Commands ###
