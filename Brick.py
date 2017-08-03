@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 
+import os
 import configparser
 import discord
+from subprocess import call
+from sys import argv
+from os import execv
 from discord.ext.commands import Bot
 from discord.ext import commands
+
+# Change to script's directory
+path = os.path.dirname(os.path.realpath(__file__))
+os.chdir(path)
 
 bot_prefix = "B, "
 my_bot = Bot(command_prefix=bot_prefix)
@@ -12,9 +20,19 @@ my_bot = Bot(command_prefix=bot_prefix)
 config = configparser.ConfigParser()
 config.read("token.ini")
 
+
+### Init ###
+
 @my_bot.event
-async def on_read():
+async def on_ready():
     print("Client logged in")
+
+    for server in my_bot.servers:
+        my_bot.server = server
+
+    # Roles
+    my_bot.owner_role = discord.utils.get(server.roles, name="Owner")
+    my_bot.botdev_role = discord.utils.get(server.roles, name="#botdev")
 
 ### Misc Cmds
 
@@ -27,6 +45,18 @@ async def ping(*args):
 async def about(*args):
     """About Brick."""
     return await my_bot.say("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
+
+@my_bot.command(pass_context=True, hidden=True)
+async def pull(ctx):
+    """Pull new changes from GitHub and restart."""
+    dev = ctx.message.author
+    if my_bot.botdev_role in dev.roles or my_bot.owner_role in dev.roles:
+        await my_bot.say("`Pulling changes...`")
+        call(["git", "pull"])
+        await my_bot.say("Pulled changes! Restarting...")
+        execv("./Brick.py", argv)
+    else:
+        await my_bot.say("Only bot devs and / or owners can use this command")
 
 ### Rule Commands ###
 
@@ -68,7 +98,7 @@ async def kick(ctx, member):
         try:
             member = ctx.message.mentions[0]
         except IndexError:
-            await self.bot.say("Please mention a user.")
+            await my_bot.say("Please mention a user.")
             return
         await my_bot.kick(member)
         await my_bot.say("I've kicked the user.")
@@ -83,7 +113,7 @@ async def ban(ctx, member):
         try:
             member = ctx.message.mentions[0]
         except IndexError:
-            await self.bot.say("Please mention a user.")
+            await my_bot.say("Please mention a user.")
             return
         await my_bot.ban(member)
         await my_bot.say("I've banned the user.")
