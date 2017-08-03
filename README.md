@@ -8,4 +8,4 @@ The New Shack Secret Service Discord Bot
 
 ### How to use :
 
-Set your token in Token.ini and run the script via python3.
+Fill the blank fields in config.ini and run the script via python3.
