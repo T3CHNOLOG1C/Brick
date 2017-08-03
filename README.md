@@ -4,7 +4,7 @@ The New Shack Secret Service Discord Bot
 ### Requirements :
 
 - Python 3.6
-- [Discord.py](https://github.com/Rapptz/discord.py)
+- `pip install -r requirements.txt`
 
 ### How to use :
 
