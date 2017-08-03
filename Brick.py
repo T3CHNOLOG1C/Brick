@@ -62,9 +62,14 @@ async def r7(*args):
 
 @commands.has_permissions(kick_members=True)
 @my_bot.command(pass_context=True)
-async def kick(member):
+async def kick(ctx, member):
     """Kick a member. (Staff Only)"""
     try:       
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            await self.bot.say("Please mention a user.")
+            return
         await my_bot.kick(member)
         await my_bot.say("I've kicked the user.")
     except discord.errors.Forbidden:
