@@ -124,7 +124,14 @@ async def ban(ctx, member):
         await my_bot.say("I've banned the user.")
     except discord.errors.Forbidden:
         await my_bot.say("💢 I dont have permission to do this.")
-    
+
+@commands.has_permissions(administrator=True)
+@my_bot.command(pass_context=True)
+async def restart():
+    """Restart the bot (Staff Only)"""
+    await my_bot.say("`Restarting, please wait...`")
+    execv("./Brick.py", argv)
+
 ### Meme Commands ###
 
 @my_bot.command()
@@ -278,7 +285,7 @@ async def whats(*, term):
             await my_bot.say("**__T3CHNOLOG1C :__**\n\nThe cancerous retard that runs this server.")
     elif term.lower() == "are you":
         return await my_bot.say("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
-        
+
     else:
         exception = False
         try:
