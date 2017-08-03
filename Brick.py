@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import configparser
 import discord
 from discord.ext.commands import Bot
