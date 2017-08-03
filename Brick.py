@@ -74,6 +74,21 @@ async def kick(ctx, member):
         await my_bot.say("I've kicked the user.")
     except discord.errors.Forbidden:
         await my_bot.say("💢 I dont have permission to do this.")
+
+@commands.has_permissions(ban_members=True)
+@my_bot.command(pass_context=True)
+async def ban(ctx, member):
+    """Ban a member. (Staff Only)"""
+    try:       
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            await self.bot.say("Please mention a user.")
+            return
+        await my_bot.ban(member)
+        await my_bot.say("I've banned the user.")
+    except discord.errors.Forbidden:
+        await my_bot.say("💢 I dont have permission to do this.")
     
 ### Meme Commands ###
 
