@@ -200,7 +200,7 @@ async def urban(*, term=None):
                 textExamples = "None"
 
             try:
-                embed = discord.Embed(title="Definition of {}\n\n".format(word), colour=discord.Color.orange())
+                embed = discord.Embed(title="Definition of {}\n\n".format(word), colour=discord.Color.blue())
                 embed.set_thumbnail(url="http://i.imgur.com/B1gZbQz.png")
                 embed.url = permalink
                 embed.description = definition + "\n"
@@ -218,7 +218,7 @@ async def urban(*, term=None):
             await my_bot.say("The specified definition does not exist! There are less than {} definitons for this term!".format(n))
     else:
         try:
-            embed = discord.Embed(title="¯\_(ツ)_/¯", colour=discord.Color.orange())
+            embed = discord.Embed(title="¯\_(ツ)_/¯", colour=discord.Color.blue())
             embed.url = "http://www.urbandictionary.com/define.php?term={}".format(term.replace(" ", "%20"))
             embed.description = "\nThere aren't any definitions for *{0}* yet.\n\n[Can you define it?](http://www.urbandictionary.com/add.php?word={1})\n".format(term, term.replace(" ", "%20"))
             embed.set_footer(text="Error 404", icon_url="http://i.imgur.com/w6TtWHK.png")
@@ -257,14 +257,14 @@ async def whats(*, term):
     if term.lower() == "kai" or term.lower() == "mitchy":
         kai = await my_bot.get_user_info("272908611255271425")
         try:
-            embed = discord.Embed(title="Kai", colour=discord.Color.orange())
+            embed = discord.Embed(title="Kai", colour=discord.Color.blue())
             embed.set_thumbnail(url=kai.avatar_url)
             embed.description = "An edgy kid that spends too much time on tumblr, previously named mitchy, previously named sans-serif"
             await my_bot.say(embed=embed)
         except discord.errors.Forbidden:
             await my_bot.say("**__Kai :__**\n\nAn edgy kid that spends too much time on tumblr, previously named mitchy, previously named sans-serif")
     elif term.lower() == "ubuntu":
-            embed = discord.Embed(title="Ubuntu", colour=discord.Color.orange())
+            embed = discord.Embed(title="Ubuntu", colour=discord.Color.blue())
             embed.set_thumbnail(url="http://i.imgur.com/B1gZbQz.png")
             embed.url = "http://www.urbandictionary.com/define.php?term=ubuntu"
             embed.description = "Ubuntu is an ancient african word, meaning \"I can't configure Debian\"" + "\n"
@@ -292,7 +292,7 @@ async def whats(*, term):
             #Start wikipedia search
             wiki = wikipedia.page(term)
             permalink = "https://en.wikipedia.org/wiki/{}".format(term.replace(" ", "_"))
-            embed = discord.Embed(title=term, colour=discord.Color.orange())
+            embed = discord.Embed(title=term, colour=discord.Color.blue())
             embed.url = permalink
             if wiki.summary[-13:] == "may refer to:":
                 if len(wiki.content) > 1950:
@@ -335,7 +335,7 @@ async def whats(*, term):
 
                     name = js["name"]
 
-                    embed = discord.Embed(title=name, colour=discord.Color.orange())
+                    embed = discord.Embed(title=name, colour=discord.Color.blue())
                     
                     try:
                         briefDescription = js["description"]
