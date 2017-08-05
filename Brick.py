@@ -158,14 +158,14 @@ filtered_keywords = {
     'lel', 'lool'
 }
 
-async def add_restriction(usr):
-    with open("data/filters.json") as f:
-        filters = json.load(f)
-    if usr.id not in filters:
-        filters[usr.id] = 30
-    filters[usr.id] = filters[usr.id] - 1
-    if filters[usr.id] = 0:
-        await self.bot.add_roles(usr, self.bot.muted_role)
+#async def add_restriction(usr):
+ #   with open("data/filters.json") as f:
+  #      filters = json.load(f)
+   # if usr.id not in filters:
+    #    filters[usr.id] = 30
+    #filters[usr.id] = filters[usr.id] - 1
+    #if filters[usr.id] == 0:
+     #   await self.bot.add_roles(usr, self.bot.muted_role)
         
 
 
