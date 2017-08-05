@@ -149,6 +149,27 @@ async def t3ch(*Args):
     """Goddamn Nazimod"""
     return await my_bot.say("https://i.imgur.com/4kANai8.png")
 
+
+### On-Message events ###
+
+# 4 per line tyvm
+filtered_keywords = {
+    'lol', 'kek', 'xd', 'lmao',
+    'lel', 'lool'
+}
+
+async def add_restriction(usr):
+    with open("data/filters.json") as f:
+        filters = json.load(f)
+    if usr.id not in filters:
+        filters[usr.id] = 30
+    filters[usr.id] = filters[usr.id] - 1
+    if filters[usr.id] = 0:
+        await self.bot.add_roles(usr, self.bot.muted_role)
+        
+
+
+
 ### Online search commands ###
 
 @my_bot.command()
@@ -253,6 +274,9 @@ async def whats(*, term):
         term = term[4:]
 
     term = capwords(term)
+
+    if len(term) > 300:
+        return await my_bot.say("Request is too long!")
 
     if term.lower() == "kai" or term.lower() == "mitchy":
         kai = await my_bot.get_user_info("272908611255271425")
@@ -389,8 +413,10 @@ async def whats(*, term):
             except KeyError:
                 if js["error"]["code"] == 403: #Checks if API Key is specified
                     await my_bot.say("You did not mention a Google kgsearch API Key in the config.ini file! Please set up one here : https://console.developers.google.com/project/_/apiui/credential")
-                elif js["error"]["code"] == 400: #Checks if API Key is valid
+                elif js["error"]["message"] == "API key not valid. Please pass a valid API key.": #Checks if API Key is valid
                     await my_bot.say("The mentioned Google kgsearch API Key is invalid! Please set up a correct API Key here : https://console.developers.google.com/project/_/apiui/credential")
+                else:
+                    await my_bot.say("Invalid request. Stop trying to break the bot you shit.")
 
 
 my_bot.run(config['Main']['token']) 
