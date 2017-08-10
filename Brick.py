@@ -4,8 +4,6 @@ import os
 import configparser
 import asyncio
 import traceback
-from subprocess import call
-from sys import argv
 
 import discord
 from discord.ext import commands
@@ -17,7 +15,7 @@ os.chdir(path)
 bot_prefix = "sudo "
 bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.")
 
-#read config.ini
+# Eead config.ini
 config = configparser.ConfigParser()
 config.read("config.ini")
 
@@ -90,14 +88,36 @@ async def on_ready():
     bot.owner_role = discord.utils.get(server.roles, name="Owner")
     bot.botdev_role = discord.utils.get(server.roles, name="#botdev")
 
-
+    # Channels
+    bot.announcements_channel = discord.utils.get(server.channels, name="announcements")
 
 
     print("Client logged in as {}, in the following server : {}".format(bot.user.name, server.name))
 
+# Core commands
 
+@commands.has_permissions(administrator=True)
+@bot.command(hidden=True)
+async def unload(addon: str):
+    """Unloads an addon."""
+    try:
+        addon = "addons." + addon
+        bot.unload_extension(addon)
+        await bot.say('✅ Addon unloaded.')
+    except Exception as e:
+        await bot.say('💢 Error trying to unload the addon:\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
-
+@commands.has_permissions(administrator=True)
+@bot.command(name='reload', aliases=['load'], hidden=True)
+async def reload(addon : str):
+    """(Re)loads an addon."""
+    try:
+        addon = "addons." + addon
+        bot.unload_extension(addon)
+        bot.load_extension(addon)
+        await bot.say('✅ Addon reloaded.')
+    except Exception as e:
+        await bot.say('💢 Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
 # Run the bot
 bot.run(config['Main']['token'])
