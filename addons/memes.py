@@ -31,12 +31,12 @@ class Memes:
     @commands.command()
     async def bigsmoke(self):
         """Memes."""
-        await self.bot.say(ctx, "http://i.imgur.com/vo5l6Fo.jpg\nALL YOU HAD TO DO WAS FOLLOW THE DAMN GUIDE CJ!")
+        await self.bot.say("http://i.imgur.com/vo5l6Fo.jpg\nALL YOU HAD TO DO WAS FOLLOW THE DAMN GUIDE CJ!")
  
     @commands.command()
     async def bigorder(self):
         """Memes."""
-        await self.bot.say(ctx, "I'll have two number 9s, a number 9 large, a number 6 with extra dip, a number 7, two number 45s, one with cheese, and a large soda.")
+        await self.bot.say("I'll have two number 9s, a number 9 large, a number 6 with extra dip, a number 7, two number 45s, one with cheese, and a large soda.")
  
 def setup(bot):
     bot.add_cog(Memes(bot))
