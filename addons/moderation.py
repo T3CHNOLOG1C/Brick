@@ -47,13 +47,20 @@ class Moderation:
             await self.bot.say("💢 I dont have permission to do this.")
 
     @commands.command(pass_context=True, hidden=True)
-    async def pull(self, ctx):
-        """Pull new changes from Git and restart."""
+    async def pull(self, ctx, pip=None):
+        """Pull new changes from Git and restart.
+        Append -p or --pip to this command to also update python modules from requirements.txt.
+        """
         dev = ctx.message.author
         if self.bot.botdev_role in dev.roles or self.bot.owner_role in dev.roles:
             await self.bot.say("`Pulling changes...`")
             call(["git", "pull"])
-            await self.bot.say("Pulled changes! Restarting...")
+            pip_text = ""
+            if pip == "-p" or pip == "--pip":
+                call(["python3.6", "-m", "pip", "install", "--user", "-r",
+                    "requirements.txt"])
+                pip_text = " and updated python dependencies"
+            await self.bot.say("Pulled changes{}! Restarting...".format(pip_text))
             execv("./Brick.py", argv)
         else:
             await self.bot.say("Only bot devs and / or owners can use this command")
