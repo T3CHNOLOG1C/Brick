@@ -12,6 +12,12 @@ from discord.ext import commands
 path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(path)
 
+# Create database
+os.makedirs("database", exist_ok=True)
+if not os.path.isfile("database/github_releases.json"):
+    with open("database/github_releases.json", "w") as f:
+        f.write("{}")
+
 bot_prefix = "sudo "
 bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.")
 
@@ -20,7 +26,8 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 # Handle errors
-# Taken from https://github.com/916253/Kurisu/blob/31b1b747e0d839181162114a6e5731a3c58ee34f/run.py#L88
+# Taken from 
+# https://github.com/916253/Kurisu/blob/31b1b747e0d839181162114a6e5731a3c58ee34f/run.py#L88
 @bot.event
 async def on_command_error(error, ctx):
     if isinstance(error, commands.errors.CommandNotFound):
@@ -63,21 +70,6 @@ async def on_error(event_method, *args, **kwargs):
     print(kwargs)
 
 
-# Load addons
-addons = [
-     'addons.memes',
-     'addons.misc',
-     'addons.rules',
-     'addons.online',
-     'addons.moderation',
- ]
-
-for addon in addons:
-    try:
-        bot.load_extension(addon)
-    except Exception as e:
-        print("Failed to load {} :\n{} : {}".format(addon, type(e).__name__, e))
-
 @bot.event
 async def on_ready():
 
@@ -90,6 +82,22 @@ async def on_ready():
 
     # Channels
     bot.announcements_channel = discord.utils.get(server.channels, name="announcements")
+
+    # Load addons
+    addons = [
+         'addons.memes',
+         'addons.misc',
+         'addons.rules',
+         'addons.online',
+         'addons.moderation',
+         'addons.events',
+     ]
+
+    for addon in addons:
+        try:
+            bot.load_extension(addon)
+        except Exception as e:
+            print("Failed to load {} :\n{} : {}".format(addon, type(e).__name__, e))
 
 
     print("Client logged in as {}, in the following server : {}".format(bot.user.name, server.name))
