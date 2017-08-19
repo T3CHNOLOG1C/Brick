@@ -18,7 +18,7 @@ if not os.path.isfile("database/github_releases.json"):
     with open("database/github_releases.json", "w") as f:
         f.write("{}")
 
-bot_prefix = "sudo "
+bot_prefix = ["sudo ", "."]
 bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.")
 
 # Eead config.ini
