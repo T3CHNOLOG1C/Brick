@@ -46,7 +46,7 @@ class Moderation:
         except discord.errors.Forbidden:
             await self.bot.say("💢 I dont have permission to do this.")
 
-    @commands.command(pass_context=True, hidden=True)
+    @commands.command(pass_context=True, hidden=True, name="pull", aliases=["pacman"])
     async def pull(self, ctx, pip=None):
         """Pull new changes from Git and restart.
         Append -p or --pip to this command to also update python modules from requirements.txt.
@@ -56,7 +56,8 @@ class Moderation:
             await self.bot.say("`Pulling changes...`")
             call(["git", "pull"])
             pip_text = ""
-            if pip == "-p" or pip == "--pip":
+            if pip == "-p" or pip == "--pip" or pip == "-Syu":
+                await self.bot.say("`Updating python dependencies...`")
                 call(["python3.6", "-m", "pip", "install", "--user", "-r",
                     "requirements.txt"])
                 pip_text = " and updated python dependencies"
