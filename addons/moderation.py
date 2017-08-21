@@ -76,5 +76,34 @@ class Moderation:
         await self.bot.say("`Restarting, please wait...`")
         execv("./Brick.py", argv)
 
+    @commands.has_permissions(manage_messages=True)
+    @commands.command(pass_context=True)
+    async def speak(self, ctx, destination, *, message):
+        """Make the bot speak"""
+        await self.bot.delete_message(ctx.message)
+        channel = ctx.message.channel_mentions[0]
+        await self.bot.send_message(channel, message)
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(pass_context=True)
+    async def dm(self, ctx, *, message):
+        """
+        DM mentionned users. 
+        Append --everyone at the beginning of this message to DM everyone.
+        """
+        if message[0:10] == "--everyone":
+            for member in self.bot.server.members:
+                if member != self.bot.user and member != ctx.message.author:
+                    try:
+                        await self.bot.send_message(member, message[10:])
+                    except discord.errors.Forbidden:
+                        await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
+        else:
+            for member in ctx.message.mentions:
+                try:
+                    await self.bot.send_message(member, message)
+                except discord.errors.Forbidden:
+                    await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
+
 def setup(bot):
     bot.add_cog(Moderation(bot))
