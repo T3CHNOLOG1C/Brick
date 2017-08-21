@@ -64,7 +64,10 @@ class Moderation:
             await self.bot.say("Pulled changes{}! Restarting...".format(pip_text))
             execv("./Brick.py", argv)
         else:
-            await self.bot.say("Only bot devs and / or owners can use this command")
+            if "pacman" in ctx.message.content:
+                await self.bot.say("`{} is not in the sudoers file. This incident will be reported.`".format(ctx.message.author.display_name))
+            else:
+                await self.bot.say("Only bot devs and / or owners can use this command")
 
     @commands.has_permissions(administrator=True)
     @commands.command()
