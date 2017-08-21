@@ -4,6 +4,9 @@ import os
 import configparser
 import asyncio
 import traceback
+import atexit
+import signal
+from subprocess import Popen
 
 import discord
 from discord.ext import commands
@@ -11,6 +14,18 @@ from discord.ext import commands
 # Change to script's directory
 path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(path)
+
+# Start Music Bot
+music_bot = Popen(['MusicBot/run.py'])
+global music_bot_pid
+music_bot_pid = music_bot.pid
+
+def killMusicBot():
+    if music_bot_pid is None:
+        pass
+    else:
+        os.kill(music_bot_pid, signal.SIGTERM)
+
 
 # Create database
 os.makedirs("database", exist_ok=True)
@@ -128,4 +143,5 @@ async def reload(addon : str):
         await bot.say('💢 Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
 # Run the bot
+atexit.register(killMusicBot)
 bot.run(config['Main']['token'])

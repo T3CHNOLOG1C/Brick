@@ -1,4 +1,9 @@
-discord.py
+discord.py=0.16.10
 requests
 wikipedia
+requests
 feedparser
+
+discord.py[voice] ~= 0.12.0
+youtube_dl
+cffi==1.6.0

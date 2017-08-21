@@ -1,4 +1,4 @@
-*.ini
+config.ini
 __pycache__
 *.json
 database
