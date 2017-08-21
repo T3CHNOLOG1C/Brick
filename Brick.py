@@ -99,7 +99,7 @@ async def on_ready():
     # Channels
     bot.announcements_channel = discord.utils.get(server.channels, name="announcements")
     bot.botdev_channel = discord.utils.get(server.channels, name="botdev")
-    bot.botdev_channel = discord.utils.get(server.channels, name="nsfw")
+    bot.nsfw_channel = discord.utils.get(server.channels, name="nsfw")
 
     # Load addons
     addons = [
