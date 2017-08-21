@@ -67,7 +67,7 @@ async def on_command_error(error, ctx):
         # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
         tb = traceback.format_exception(type(error), error, error.__traceback__)
         print(''.join(tb))
-        #await bot.send_message(bot.boterr_channel, mods_msg + '\n```' + ''.join(tb) + '\n```')
+        await bot.send_message(bot.botdev_channel, mods_msg + '\n```' + ''.join(tb) + '\n```')
 
 
 @bot.event
@@ -80,7 +80,7 @@ async def on_error(event_method, *args, **kwargs):
     print(''.join(tb))
     mods_msg += '\n```' + ''.join(tb) + '\n```'
     mods_msg += '\nargs: `{}`\n\nkwargs: `{}`'.format(args, kwargs)
-    #await bot.send_message(bot.boterr_channel, mods_msg)
+    await bot.send_message(bot.botdev_channel, mods_msg)
     print(args)
     print(kwargs)
 
@@ -94,9 +94,12 @@ async def on_ready():
     # Roles
     bot.owner_role = discord.utils.get(server.roles, name="Owner")
     bot.botdev_role = discord.utils.get(server.roles, name="#botdev")
+    bot.nsfw_role = discord.utils.get(server.roles, name="nsfw")
 
     # Channels
     bot.announcements_channel = discord.utils.get(server.channels, name="announcements")
+    bot.botdev_channel = discord.utils.get(server.channels, name="botdev")
+    bot.botdev_channel = discord.utils.get(server.channels, name="nsfw")
 
     # Load addons
     addons = [
