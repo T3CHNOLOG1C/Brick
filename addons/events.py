@@ -39,6 +39,7 @@ class Events:
 
     new_releases_active = True
 
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def toggleevent(self, param):
         """
