@@ -1,4 +1,4 @@
-discord.py=0.16.10
+discord.py==0.16.10
 requests
 wikipedia
 requests
