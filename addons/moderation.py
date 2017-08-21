@@ -79,16 +79,16 @@ class Moderation:
     @commands.has_permissions(manage_messages=True)
     @commands.command(pass_context=True)
     async def speak(self, ctx, destination, *, message):
-        """Make the bot speak"""
+        """Make the bot speak (Staff Only)"""
         await self.bot.delete_message(ctx.message)
         channel = ctx.message.channel_mentions[0]
         await self.bot.send_message(channel, message)
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def dm(self, ctx, *, message):
+    async def dm(self, ctx, message):
         """
-        DM mentionned users. 
+        DM mentionned users. (Staff Only)
         Append --everyone at the beginning of this message to DM everyone.
         """
         if message[0:10] == "--everyone":
