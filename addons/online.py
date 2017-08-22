@@ -165,7 +165,10 @@ class Online:
             exception = False
             try:
                 #Start wikipedia search
-                wiki = wikipedia.page(term)
+                try:
+                    wiki = wikipedia.page(term)
+                except:
+                    await self.bot.say("Damn, this is one of the least valid requests I've ever seen. Why do you want to break me so bad? Did someone pay you to break me or something??") 
                 permalink = "https://en.wikipedia.org/wiki/{}".format(term.replace(" ", "_"))
                 embed = discord.Embed(title=term, colour=discord.Color.blue())
                 embed.url = permalink
