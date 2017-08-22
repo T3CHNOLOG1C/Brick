@@ -182,7 +182,7 @@ class Online:
                 embed.set_footer(text="From Wikipedia", icon_url="http://i.imgur.com/DO4wDN4.png")
                 try: 
                     await self.bot.say(embed=embed)
-                except discord.errors.Forbidden:
+                except:
                     await self.bot.say("**__{}__**\n\n\n{}\n\n*Link : {}*".format(term, embed.description, permalink))
                 #Images soon
 
