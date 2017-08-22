@@ -89,15 +89,19 @@ class Moderation:
     async def dm(self, ctx, message):
         """
         DM mentionned users. (Staff Only)
-        Append --everyone at the beginning of this message to DM everyone.
+        Message has to be between quotes.
+        Append --everyone at the end of this command to DM everyone.
         """
-        if message[0:10] == "--everyone":
-            for member in self.bot.server.members:
-                if member != self.bot.user and member != ctx.message.author:
-                    try:
-                        await self.bot.send_message(member, message[10:])
-                    except discord.errors.Forbidden:
-                        await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
+        if message[-10:] == "--everyone":
+            if self.bot.owner_role in ctx.message.author.roles:
+                for member in self.bot.server.members:
+                    if member != self.bot.user and member != ctx.message.author:
+                        try:
+                            await self.bot.send_message(member, message[10:])
+                        except discord.errors.Forbidden:
+                            await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
+            else:
+                await self.bot.say("Only the owners can DM everyone!")
         else:
             for member in ctx.message.mentions:
                 try:
