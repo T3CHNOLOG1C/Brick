@@ -252,7 +252,7 @@ class Online:
                     
                         try:
                             await self.bot.say(embed=embed)
-                        except discord.errors.Forbidden:
+                        except:
                             await self.bot.say("__**{}** ({})__\n\n{}\n\n\n*{}*\n\n{}\n".format(name, permalink, briefDescription, detailedDescription, image))
 
                         if disambig is True:
