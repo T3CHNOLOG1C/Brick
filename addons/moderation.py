@@ -92,12 +92,12 @@ class Moderation:
         Message has to be between quotes.
         Append --everyone at the end of this command to DM everyone.
         """
-        if message[-10:] == "--everyone":
+        if ctx.message.content[-10:] == "--everyone":
             if self.bot.owner_role in ctx.message.author.roles:
                 for member in self.bot.server.members:
                     if member != self.bot.user and member != ctx.message.author:
                         try:
-                            await self.bot.send_message(member, message[10:])
+                            await self.bot.send_message(member, message)
                         except discord.errors.Forbidden:
                             await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
             else:
