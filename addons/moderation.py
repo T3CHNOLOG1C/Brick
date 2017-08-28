@@ -86,13 +86,13 @@ class Moderation:
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def dm(self, ctx, message):
+    async def dm(self, ctx, message, *, mentions):
         """
         DM mentionned users. (Staff Only)
         Message has to be between quotes.
         Append --everyone at the end of this command to DM everyone.
         """
-        if ctx.message.content[-10:] == "--everyone":
+        if mentions == "--everyone":
             if self.bot.owner_role in ctx.message.author.roles:
                 for member in self.bot.server.members:
                     if member != self.bot.user and member != ctx.message.author:
@@ -104,7 +104,7 @@ class Moderation:
                 await self.bot.say("Only the owners can DM everyone!")
         else:
             await self.bot.delete_message(ctx.message)
-            for member in ctx.message.mentions:
+            for member in mentions:
                 try:
                     await self.bot.send_message(member, message)
                 except discord.errors.Forbidden:
