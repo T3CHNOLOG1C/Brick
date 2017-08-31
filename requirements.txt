@@ -2,6 +2,8 @@ discord.py==0.16.10
 requests
 wikipedia
 requests
+beautifulsoup4
+lxml
 feedparser
 
 discord.py[voice] ~= 0.12.0
