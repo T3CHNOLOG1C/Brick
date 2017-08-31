@@ -2,11 +2,14 @@
 
 import configparser
 import json
-from asyncio import sleep 
+import asyncio
+import aiohttp
+import datetime
 
 import discord
 import feedparser
 from discord.ext import commands
+from bs4 import BeautifulSoup
 
 class Events:
     """
@@ -64,50 +67,72 @@ class Events:
         Check for new GitHub releases of specified repositories
         """
         await self.bot.wait_until_ready()
-        while self.new_releases_active:
-            for owner, repo in self.repos.items():
-                releases = feedparser.parse(
-                    ("https://github.com/{}/{}/releases.atom".format(owner, repo))
-                )
-                try:
-                    latest = releases['entries'][0]
+        while not self.bot.is_closed and self.new_releases_active:
 
-                    with open("database/github_releases.json", "r") as f:
-                        js = json.load(f)
+            timestamp = datetime.datetime.now()
+            if timestamp.minute % 2 == 0 and timestamp.second == 0:
 
-                    if latest['updated'] <= js['{}/{}'.format(owner, repo)][0]:
+                for owner, repo in self.repos.items():
+                    try:
+                        with aiohttp.ClientSession() as session:
+                            with aiohttp.Timeout(5):
+                                async with session.get("https://github.com/{}/{}/releases.atom".format(owner, repo)) as r:
+                                    feed = await r.text()
+                    except:
                         continue
-                    elif str(latest['id']) == js['{}/{}'.format(owner, repo)][1]:
+                    releases = feedparser.parse(feed)
+
+                    try:
+                        latest = releases['entries'][0]
+
+                        with open("database/github_releases.json", "r") as f:
+                            js = json.load(f)
+
+                        if latest['updated'] <= js['{}/{}'.format(owner, repo)][0]:
+                            continue
+                        elif str(latest['id']) == js['{}/{}'.format(owner, repo)][1]:
+                            js['{}/{}'.format(owner, repo)] = [
+                                latest['updated'], latest['id']
+                            ]
+                            continue
+                        else:
+                            permalink = latest['link']
+                            if "https://github.com" not in permalink:
+                                permalink = "https://github.com{}".format(permalink)
+                            # Dirty but works
+                            tag = permalink.split('/tag/')[1]
+
+                            # Check if this is a release and not a tag
+                            with aiohttp.ClientSession() as session:
+                                with aiohttp.Timeout(10):
+                                    async with session.get(permalink) as r:
+                                        html = await r.text()
+                            soup = BeautifulSoup(html, 'lxml')
+                            authorship = soup.find('p', attrs={'class': 'release-authorship'})
+
+                            if "released this" in authorship and "tagged this" not in authorship:
+                                await self.bot.send_message(
+                                    self.bot.announcements_channel,
+                                    "{} {} released: {}".format(repo, tag, permalink)
+                                )
+                                js['{}/{}'.format(owner, repo)] = [
+                                    latest['updated'], latest['id']
+                                ]
+                            
+                    except KeyError:
+
+                        # Entry does not exist in database yet, so we create it
                         js['{}/{}'.format(owner, repo)] = [
                             latest['updated'], latest['id']
                         ]
+
+                    except IndexError:
                         continue
-                    else:
-                        permalink = latest['link']
-                        # Dirty but works
-                        tag = permalink.split('/tag/')[1]
-                        await self.bot.send_message(
-                            self.bot.announcements_channel,
-                            "{} {} released: {}".format(repo, tag, permalink)
-                        )
-                        js['{}/{}'.format(owner, repo)] = [
-                            latest['updated'], latest['id']
-                        ]
-                    
-                except KeyError:
 
-                    # Entry does not exist in database yet, so we create it
-                    js['{}/{}'.format(owner, repo)] = [
-                        latest['updated'], latest['id']
-                    ]
+                    with open("database/github_releases.json", "w") as f:
+                        json.dump(js, f, indent=2, separators=(',', ':'))
 
-                except IndexError:
-                    continue
-
-                with open("database/github_releases.json", "w") as f:
-                    json.dump(js, f, indent=2, separators=(',', ':'))
-
-            await sleep(60)
+            await asyncio.sleep(1)
 
 
 def setup(bot):
