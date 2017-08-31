@@ -66,8 +66,8 @@ class Events:
                 await self.bot.say("I will now start responding to `h`.")
 
         elif param == "list":
-            await self.bot.say("__List of events :__\n\n- new_releases : {}".format(
-                    "**Active**" if self.new_releases_active else "*Inactive*"))
+            await self.bot.say("__List of events :__\n\n- new_releases : {}\n\n- h : {}".format(
+                    "**Active**" if self.new_releases_active else "*Inactive*", "**Active**" if self.h_active else "*Inactive*"))
         else:
             await self.bot.say("This event doesn't exist!"
                                 + " Use `toggleevent list` to list every event.")
