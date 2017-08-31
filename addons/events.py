@@ -108,16 +108,17 @@ class Events:
                                     async with session.get(permalink) as r:
                                         html = await r.text()
                             soup = BeautifulSoup(html, 'lxml')
-                            authorship = soup.find('p', attrs={'class': 'release-authorship'})
+                            authorship = str(soup.find('p', attrs={'class': 'release-authorship'}))
 
                             if "released this" in authorship and "tagged this" not in authorship:
                                 await self.bot.send_message(
                                     self.bot.announcements_channel,
                                     "{} {} released: {}".format(repo, tag, permalink)
                                 )
-                                js['{}/{}'.format(owner, repo)] = [
-                                    latest['updated'], latest['id']
-                                ]
+
+                            js['{}/{}'.format(owner, repo)] = [
+                                latest['updated'], latest['id']
+                            ]
                             
                     except KeyError:
 
