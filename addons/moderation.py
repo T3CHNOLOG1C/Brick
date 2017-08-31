@@ -27,9 +27,25 @@ class Moderation:
                 await self.bot.say("Please mention a user.")
                 return
             await self.bot.kick(member)
-            await self.bot.say("I've kicked the user.")
+            await self.bot.say("I've kicked {}.".format(member))
         except discord.errors.Forbidden:
             await self.bot.say("💢 I dont have permission to do this.")
+            
+    @commands.has_permissions(kick_members=True)
+    @commands.command(pass_context=True)
+    async def multikick(self, ctx, *, members):
+        """Kick multiple members. (Staff Only)"""
+        try:
+            mention_check = ctx.message.mentions[0]
+        except IndexError:
+            await self.bot.say("Please mention at least one user.")
+            return
+        for member in ctx.message.mentions:
+            try:
+                await self.bot.kick(member)
+                await self.bot.say("Kicked {}.".format(member))
+            except discord.errors.Forbidden:
+                await self.bot.say("💢 Couldn't kick {}".format(member))
 
     @commands.has_permissions(ban_members=True)
     @commands.command(pass_context=True)
@@ -42,9 +58,26 @@ class Moderation:
                 await self.bot.say("Please mention a user.")
                 return
             await self.bot.ban(member)
-            await self.bot.say("I've banned the user.")
+            await self.bot.say("I've banned {}.".format(member))
         except discord.errors.Forbidden:
             await self.bot.say("💢 I dont have permission to do this.")
+
+    @commands.has_permissions(ban_members=True)
+    @commands.command(pass_context=True)
+    async def multiban(self, ctx, *, members):
+        """Ban multiple members. (Staff Only)"""
+
+        try:
+            mention_check = ctx.message.mentions[0]
+        except IndexError:
+            await self.bot.say("Please mention a user.")
+            return
+        for member in ctx.message.mentions:
+            try:
+                await self.bot.ban(member)
+                await self.bot.say("Banned {}.".format(member))
+            except discord.errors.Forbidden:
+                await self.bot.say("💢 Couldn't ban {}".format(member))
 
     @commands.command(pass_context=True, hidden=True, name="pull", aliases=["pacman"])
     async def pull(self, ctx, pip=None):
