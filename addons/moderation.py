@@ -109,36 +109,6 @@ class Moderation:
         await self.bot.say("`Restarting, please wait...`")
         execv("./Brick.py", argv)
 
-    @commands.has_role("Owner")
-    @commands.command()
-    async def massnickname(self, *, nickname):
-        """Change everyone's nickname (Owners only)"""
-
-        if len(nickname) > 32:
-            await self.bot.say("Nickname must have 32 characters or less!")
-        else:
-            i = 0
-            for member in self.bot.server.members:
-                try:
-                    await self.bot.change_nickname(member, nickname)
-                    i += 1
-                except discord.errors.Forbidden:
-                    continue
-            await self.bot.say("Changed nickname of {} members!".format(i))
-
-    @commands.has_role("Owner")
-    @commands.command()
-    async def resetnicknames(self):
-        """Reset everyone's nickname (Staff only)"""
-        i = 0
-        for member in self.bot.server.members:
-            try:
-                await self.bot.change_nickname(member, None)
-                i += 1
-            except:
-                continue
-        await self.bot.say("Reset nickname of {} members!".format(i))
-
     @commands.has_permissions(manage_messages=True)
     @commands.command(pass_context=True)
     async def speak(self, ctx, destination, *, message):
