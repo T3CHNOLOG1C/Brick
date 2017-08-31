@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import datetime
+
 import discord
 from discord.ext import commands
 
@@ -12,10 +14,16 @@ class Misc:
         self.bot = bot
         print("{} addon loaded.".format(self.__class__.__name__))
         
-    @commands.command()
-    async def ping(self):
+    @commands.command(pass_context=True)
+    async def ping(self, ctx):
         """Pong!"""
-        return await self.bot.say("Pong!")
+
+        # https://github.com/appu1232/Discord-Selfbot/blob/master/cogs/misc.py#L602
+        msgtime = ctx.message.created_at.now()
+        await (await self.bot.ws.ping())
+        now = datetime.datetime.now()
+        ping = now - msgtime
+        return await self.bot.say("Pong! Response Time: {} ms".format(ping.microseconds / 1000.0))
 
     @commands.command()
     async def about(self):
