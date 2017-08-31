@@ -134,7 +134,7 @@ class Moderation:
                 await self.bot.say("Only the owners can DM everyone!")
         else:
             await self.bot.delete_message(ctx.message)
-            for member in mentions:
+            for member in ctx.message.mentions:
                 try:
                     await self.bot.send_message(member, message)
                 except discord.errors.Forbidden:
