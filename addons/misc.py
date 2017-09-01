@@ -19,11 +19,11 @@ class Misc:
         """Pong!"""
 
         # https://github.com/appu1232/Discord-Selfbot/blob/master/cogs/misc.py#L602
-        msgtime = ctx.message.created_at.now()
+        msgtime = ctx.message.timestamp
         await (await self.bot.ws.ping())
         now = datetime.datetime.now()
         ping = now - msgtime
-        return await self.bot.say("Pong! Response Time: {} ms".format(ping.microseconds / 1000.0))
+        return await self.bot.say("Pong! Response Time: {} ms".format(str(ping.microseconds / 1000.0)))
 
     @commands.command()
     async def about(self):
