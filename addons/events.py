@@ -27,7 +27,6 @@ class Events:
             "joel16": "3DSident",
             "kitling": "ntrboot_flasher",
             "SciresM": "boot9strap",
-            "3dsfug": "Anemone3DS",
             "TuxSH": "firmtool",
             "Steveice10": "FBI",
             "44670": "BootNTR",
@@ -37,7 +36,7 @@ class Events:
             "Robz8": "TWLoader",
             "ahezard": "nds-bootstrap",
             "Nanquitas": "BootNTR",
-            "astronautlevel": "Anemone3DS",
+            "astronautlevel2": "Anemone3DS",
         }
         bot.loop.create_task(self.new_releases())
         print("{} addon loaded.".format(self.__class__.__name__))
