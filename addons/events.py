@@ -42,6 +42,7 @@ class Events:
         print("{} addon loaded.".format(self.__class__.__name__))
 
     new_releases_active = True
+    h_active = True
 
     @commands.has_permissions(administrator=True)
     @commands.command()
@@ -57,9 +58,17 @@ class Events:
                 self.new_releases_active = True
                 await self.bot.say("Started checking for new github releases!")
 
+        elif param == "h":		
+            if self.h_active is True:		
+                self.h_active = False		
+                await self.bot.say("I will now stop responding to `h`.")		
+            else:		
+                self.h_active = True		
+                await self.bot.say("I will now start responding to `h`.")
+
         elif param == "list":
-            await self.bot.say("__List of events :__\n\n- new_releases : {}".format(
-                    "**Active**" if self.new_releases_active else "*Inactive*"))
+            await self.bot.say("__List of events :__\n\n- new_releases : {}\n- h : {}".format(
+                    "**Active**" if self.new_releases_active else "*Inactive*", "**Active**" if self.h_active else "*Inactive*"))
         else:
             await self.bot.say("This event doesn't exist!"
                                 + " Use `toggleevent list` to list every event.")
@@ -136,6 +145,11 @@ class Events:
                         json.dump(js, f, indent=2, separators=(',', ':'))
 
             await asyncio.sleep(1)
+    
+    async def on_message(self, message):
+        if message.content == "h" and message.author != self.bot.user and message.channel == self.bot.mcubrick_channel and self.h_active:
+            await self.bot.send_message(message.channel, "h")
+
 
 def setup(bot):
     bot.add_cog(Events(bot))
