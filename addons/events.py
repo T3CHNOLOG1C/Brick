@@ -175,7 +175,7 @@ class Events:
 
     async def on_message(self, message):
 
-        if message.content == "h" and message.author != self.bot.user and message.channel == self.bot.mcubrick_channel and self.h_active:
+        if message.content == "h" and message.author != self.bot.user and message.channel.id == '339954307887529985' and self.h_active:
             await self.bot.send_message(message.channel, "h")
         
         if message.channel.is_private and self.receive_dms:
