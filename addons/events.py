@@ -165,13 +165,13 @@ class Events:
         timestamp = message.edited_timestamp if message.edited_timestamp else message.timestamp
         timestamp = strftime('[%F %H:%M:%S]')
 
-        author = message.author.mention
+        author = message.channel.recipients[0].mention
 
         content = message.content
 
         attachments = ' '.join([attachment['url'] for attachment in message.attachments])
 
-        return("__**({})**  **{}**  {}:__\n\n{} {}".format(message_id, timestamp, author, content, attachments))
+        return("__**({})**  **{}**  **{}** {}:__\n\n{} {}".format(message_id, timestamp, "📤 To" if message.author.id == "332895977570566144" else "📥 From", author, content, attachments))
 
     async def on_message(self, message):
 
