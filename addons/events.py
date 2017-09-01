@@ -36,6 +36,7 @@ class Events:
             "Robz8": "TWLoader",
             "ahezard": "nds-bootstrap",
             "Nanquitas": "BootNTR",
+            "astronautlevel": "Anemone3DS",
         }
         bot.loop.create_task(self.new_releases())
         print("{} addon loaded.".format(self.__class__.__name__))
