@@ -88,6 +88,7 @@ async def on_ready():
     bot.botdev_channel = discord.utils.get(server.channels, name="botdev")
     bot.nsfw_channel = discord.utils.get(server.channels, name="nsfw")
     bot.mcubrick_channel = discord.utils.get(server.channels, name="mcu-brick")
+    bot.brickdms_channel = discord.utils.get(server.channels, name="brick-dms")
 
     # Load addons
     addons = [
@@ -134,4 +135,4 @@ async def reload(addon : str):
         await bot.say('💢 Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
 # Run the bot
-bot.run(config['Main']['token'])
+bot.run(config['Main']['token'], max_messages=10000)

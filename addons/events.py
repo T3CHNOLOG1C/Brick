@@ -5,6 +5,7 @@ import json
 import asyncio
 import aiohttp
 import datetime
+from time import strftime
 
 import discord
 import feedparser
@@ -40,9 +41,11 @@ class Events:
         }
         bot.loop.create_task(self.new_releases())
         print("{} addon loaded.".format(self.__class__.__name__))
-
+    
+    # Events
     new_releases_active = True
     h_active = True
+    receive_dms = True
 
     @commands.has_permissions(administrator=True)
     @commands.command()
@@ -65,6 +68,14 @@ class Events:
             else:		
                 self.h_active = True		
                 await self.bot.say("I will now start responding to `h`.")
+
+        elif param == "receive_dms":
+            if self.receive_dms is True:
+                self.receive_dms = False
+                await self.bot.say("Received DMs will now be ignored")
+            else:
+                self.receive_dms = True
+                await self.bot.say("Received DMs will now be transmitted in <#353101401880264704>!")
 
         elif param == "list":
             await self.bot.say("__List of events :__\n\n- new_releases : {}\n- h : {}".format(
@@ -146,10 +157,44 @@ class Events:
 
             await asyncio.sleep(1)
     
+    def formatMessage(self, message):
+        """Build a nicely formatted string from a message we want to log"""
+
+        message_id = "Edited: {}".format(message.id) if message.edited_timestamp else message.id
+
+        timestamp = message.edited_timestamp if message.edited_timestamp else message.timestamp
+        timestamp = strftime('[%F %H:%M:%S]')
+
+        author = message.author.mention
+
+        content = message.content
+
+        attachments = ' '.join([attachment['url'] for attachment in message.attachments])
+
+        return("__**({})**  **{}**  {}:__\n\n{} {}".format(message_id, timestamp, author, content, attachments))
+
     async def on_message(self, message):
+
         if message.content == "h" and message.author != self.bot.user and message.channel == self.bot.mcubrick_channel and self.h_active:
             await self.bot.send_message(message.channel, "h")
+        
+        if message.channel.is_private and self.receive_dms:
+            msg = self.formatMessage(message)
+            if len(msg) > 2000:
+                await self.bot.send_message(self.bot.brickdms_channel, msg[:2000])
+                await self.bot.send_message(self.bot.brickdms_channel, msg[2000:])
+            else:
+                await self.bot.send_message(self.bot.brickdms_channel, msg)
 
+    async def on_message_edit(self, _, message):
+
+        if message.channel.is_private and self.receive_dms:
+            msg = self.formatMessage(message)
+            if len(msg) > 2000:
+                await self.bot.send_message(self.bot.brickdms_channel, msg[:2000])
+                await self.bot.send_message(self.bot.brickdms_channel, msg[2000:])
+            else:
+                await self.bot.send_message(self.bot.brickdms_channel, msg)
 
 def setup(bot):
     bot.add_cog(Events(bot))
