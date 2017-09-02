@@ -45,12 +45,18 @@ class Speak:
                     await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
     
     @commands.has_permissions(administrator=True)
-    @commands.command()
-    async def answer(self, *, message):
+    @commands.command(pass_context=True)
+    async def answer(self, ctx, *, message):
         """Answer to the latest DM (Staff Only)"""
-
+        await self.bot.delete_message(ctx.message)
         async for m in self.bot.logs_from(channel=self.bot.brickdms_channel, limit=1):
-            member = m.mentions[0]
+            i = 0
+            while 1:
+                try:
+                    member = m.mentions[i]
+                    break
+                except IndexError:
+                    i += 1
         await self.bot.send_message(member, message)
 
 def setup(bot):
