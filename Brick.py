@@ -97,6 +97,7 @@ async def on_ready():
          'addons.online',
          'addons.moderation',
          'addons.events',
+         'addons.speak',
      ]
 
     for addon in addons:

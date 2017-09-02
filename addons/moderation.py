@@ -109,39 +109,5 @@ class Moderation:
         await self.bot.say("`Restarting, please wait...`")
         execv("./Brick.py", argv)
 
-    @commands.has_permissions(manage_messages=True)
-    @commands.command(pass_context=True)
-    async def speak(self, ctx, destination, *, message):
-        """Make the bot speak (Staff Only)"""
-        await self.bot.delete_message(ctx.message)
-        channel = ctx.message.channel_mentions[0]
-        await self.bot.send_message(channel, message)
-
-    @commands.has_permissions(administrator=True)
-    @commands.command(pass_context=True)
-    async def dm(self, ctx, message, *, mentions):
-        """
-        DM mentionned users. (Staff Only)
-        Message has to be between quotes.
-        Append --everyone at the end of this command to DM everyone.
-        """
-        if mentions == "--everyone":
-            if self.bot.owner_role in ctx.message.author.roles:
-                for member in self.bot.server.members:
-                    if member != self.bot.user and member != ctx.message.author:
-                        try:
-                            await self.bot.send_message(member, message)
-                        except discord.errors.Forbidden:
-                            await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
-            else:
-                await self.bot.say("Only the owners can DM everyone!")
-        else:
-            await self.bot.delete_message(ctx.message)
-            for member in ctx.message.mentions:
-                try:
-                    await self.bot.send_message(member, message)
-                except discord.errors.Forbidden:
-                    await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
-
 def setup(bot):
     bot.add_cog(Moderation(bot))
