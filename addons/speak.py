@@ -49,15 +49,16 @@ class Speak:
     async def answer(self, ctx, *, message):
         """Answer to the latest DM (Staff Only)"""
         await self.bot.delete_message(ctx.message)
-        async for m in self.bot.logs_from(channel=self.bot.brickdms_channel, limit=1):
-            i = 0
-            while 1:
+        async for m in self.bot.logs_from(channel=self.bot.brickdms_channel, limit=250):
                 try:
-                    member = m.mentions[i]
+                    member = m.mentions[0]
                     break
                 except IndexError:
-                    i += 1
-        await self.bot.send_message(member, message)
+                    continue
+        try:
+            await self.bot.send_message(member, message)
+        except:
+            await self.bot.say("Couldn't answer to the latest dm.")
 
 def setup(bot):
     bot.add_cog(Speak(bot))
