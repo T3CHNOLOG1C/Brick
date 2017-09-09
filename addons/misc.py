@@ -25,8 +25,8 @@ class Misc:
         ping = now - msgtime
         return await self.bot.say(":ping_pong:! Response Time: {} ms".format(str(ping.microseconds / 1000.0)))
 
-    @commands.command()
-    async def membercount(self):
+    @commands.command(pass_context=True, aliases=['mc'])
+    async def membercount(self, ctx):
         """Prints current member count"""
         return await self.bot.say("This server's current member count is: " + len(ctx.server.members))
     
