@@ -23,8 +23,14 @@ class Misc:
         await (await self.bot.ws.ping())
         now = datetime.datetime.now()
         ping = now - msgtime
-        return await self.bot.say("Pong! Response Time: {} ms".format(str(ping.microseconds / 1000.0)))
+        return await self.bot.say(":ping_pong:! Response Time: {} ms".format(str(ping.microseconds / 1000.0)))
 
+    @commands.command()
+    async def membercount(self):
+        """Prints current member count"""
+        mcount = len(guild.members)
+        return await self.bot.say("This server's current member count is:" mcount)
+    
     @commands.command()
     async def about(self):
         """About Brick."""
