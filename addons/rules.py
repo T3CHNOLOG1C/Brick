@@ -22,7 +22,7 @@ class Rules:
 
     @commands.command(hidden=True)
     async def r3(self):
-        return await self.bot.say("Rule 3: Spamming is only allowed in the dedicated spam channel, #mcu-brick.")
+        return await self.bot.say("Rule 3: Spamming is only allowed in the dedicated spam channel, <#355713947548123137>, however, automation of the aforementioned spam is not allowed.")
 
     @commands.command(hidden=True)
     async def r4(self):
