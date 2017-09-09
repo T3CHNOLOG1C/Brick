@@ -28,7 +28,7 @@ class Misc:
     @commands.command(pass_context=True, aliases=['mc'])
     async def membercount(self, ctx):
         """Prints current member count"""
-        return await self.bot.say(str(self.bot.server.name)+" currently has " + str(len(self.bot.server.members)))
+        return await self.bot.say(str(self.bot.server.name)+" currently has " + str(len(self.bot.server.members)) "members!")
     
     @commands.command()
     async def about(self):
