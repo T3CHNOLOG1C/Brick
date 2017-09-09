@@ -28,8 +28,7 @@ class Misc:
     @commands.command()
     async def membercount(self):
         """Prints current member count"""
-        mcount = len(guild.members)
-        return await self.bot.say("This server's current member count is:" + mcount)
+        return await self.bot.say("This server's current member count is:" + len(guild.members))
     
     @commands.command()
     async def about(self):
