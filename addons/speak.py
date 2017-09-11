@@ -15,8 +15,9 @@ class Speak:
     async def speak(self, ctx, destination, *, message):
         """Make the bot speak (Staff Only)"""
         await self.bot.delete_message(ctx.message)
-        channel = ctx.message.channel_mentions[0]
-        await self.bot.send_message(channel, message)
+        if len(ctx.message.channel_mentions) > 0:
+            channel = ctx.message.channel_mentions[0]
+            await self.bot.send_message(channel, message)
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
