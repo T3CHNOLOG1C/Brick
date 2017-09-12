@@ -256,7 +256,7 @@ class Online:
                             await self.bot.say("__**{}** ({})__\n\n{}\n\n\n*{}*\n\n{}\n".format(name, permalink, briefDescription, detailedDescription, image))
 
                         if disambig is True:
-                            await self.bot.say("If this is not the definition you wanted, try being a bit more precise next time. {} can refer to many things!".format(term))
+                            await self.bot.say("If this is not the definition you wanted, try being a bit more precise next time. `{}` can refer to many things!".format(term))
                     else:
                         await self.bot.say("Sorry, none of my sources have an explanation for this term :(")
                         #Coming soon : WikiData and urban dictionnary support
