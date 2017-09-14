@@ -53,7 +53,7 @@ class Moderation:
         """Ban a member. (Staff Only)"""
         owner = ctx.message.server.owner
         if ctx.message.author == owner:
-            if len(message.mentions) < 1:
+            if member == "":
                 await self.bot.say("Yes daddy t3ch?")
         try:
             try:
