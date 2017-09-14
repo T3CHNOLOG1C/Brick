@@ -52,6 +52,9 @@ class Moderation:
     async def ban(self, ctx, member):
         """Ban a member. (Staff Only)"""
         owner = ctx.message.server.owner
+        if self.bot.botdev_role in dev.roles:
+            if member is None:
+                await self.bot.say("test")
         if ctx.message.author == owner:
             if member is None:
                 await self.bot.say("Yes daddy t3ch?")
