@@ -59,8 +59,10 @@ class Moderation:
             try:
                 member = ctx.message.mentions[0]
             except IndexError:
-                await self.bot.say("Please mention a user.")
-                return
+                if ctx.message.author != owner:
+                    await self.bot.say("Please mention a user.")
+                else:
+                    return
             await self.bot.ban(member)
             await self.bot.say("I've banned {}.".format(member))
         except discord.errors.Forbidden:
