@@ -47,14 +47,11 @@ class Moderation:
             except discord.errors.Forbidden:
                 await self.bot.say("💢 Couldn't kick {}".format(member))
 
-    
+    @commands.has_permissions(ban_members=True)
     @commands.command(pass_context=True)
     async def ban(self, ctx, member):
         """Ban a member. (Staff Only)"""
         owner = ctx.message.server.owner
-        if self.bot.botdev_role in dev.roles:
-            if member is None:
-                await self.bot.say("test")
         if ctx.message.author == owner:
             if member is None:
                 await self.bot.say("Yes daddy t3ch?")
