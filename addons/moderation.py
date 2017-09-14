@@ -47,7 +47,7 @@ class Moderation:
             except discord.errors.Forbidden:
                 await self.bot.say("💢 Couldn't kick {}".format(member))
 
-    @commands.has_permissions(ban_members=True)
+    
     @commands.command(pass_context=True)
     async def ban(self, ctx, member):
         """Ban a member. (Staff Only)"""
