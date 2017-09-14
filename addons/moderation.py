@@ -49,7 +49,7 @@ class Moderation:
 
     @commands.has_permissions(ban_members=True)
     @commands.command(pass_context=True)
-    async def ban(self, ctx, member):
+    async def ban(self, ctx, member=""):
         """Ban a member. (Staff Only)"""
         owner = ctx.message.server.owner
         if ctx.message.author == owner:
