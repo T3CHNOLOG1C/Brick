@@ -43,5 +43,10 @@ class Memes:
         """SIEG HEIL"""
         await self.bot.say("HEIL T3CH!")
         
+    @commands.command()
+    async def lenny(self):
+        """( ͡° ͜ʖ ͡°)"""
+        await self.bot.say("( ͡° ͜ʖ ͡°)")
+        
 def setup(bot):
     bot.add_cog(Memes(bot))
