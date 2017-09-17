@@ -22,28 +22,14 @@ class Speak:
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
     async def dm(self, ctx, message, *, mentions):
-        """
-        DM mentionned users. (Staff Only)
-        Message has to be between quotes.
-        Append --everyone at the end of this command to DM everyone.
-        """
-        if mentions == "--everyone":
-            if self.bot.owner_role in ctx.message.author.roles:
-                for member in self.bot.server.members:
-                    if member != self.bot.user and member != ctx.message.author:
-                        try:
-                            await self.bot.send_message(member, message)
-                        except discord.errors.Forbidden:
-                            await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
-            else:
-                await self.bot.say("Only the owners can DM everyone!")
-        else:
-            await self.bot.delete_message(ctx.message)
-            for member in ctx.message.mentions:
-                try:
-                    await self.bot.send_message(member, message)
-                except discord.errors.Forbidden:
-                    await self.bot.send_message(ctx.message.channel, "Couldn't send message to {}.".format(member.mention))
+        """DM mentionned users. (Staff Only)
+        Message has to be between quotes."""
+        await self.bot.delete_message(ctx.message)
+        for member in ctx.message.mentions:
+            try:
+                await self.bot.send_message(member, message)
+            except discord.errors.Forbidden:
+                await self.bot.send_message(self.bot.logs_channel, "Couldn't send message to {}.".format(member.mention))
     
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
