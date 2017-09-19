@@ -55,20 +55,13 @@ class Moderation:
         if ctx.message.author == owner:
             if member == "":
                 await self.bot.say("Yes daddy t3ch?")
-                
-        if member not == "":
-            try:
-                try:
-                    member = ctx.message.mentions[0]
-                except IndexError:
-                    if ctx.message.author != owner:
-                        await self.bot.say("Please mention a user.")
-                    else:
-                        return
+        elif member not == "":
                 await self.bot.ban(member)
                 await self.bot.say("I've banned {}.".format(member))
             except discord.errors.Forbidden:
                 await self.bot.say("💢 I dont have permission to do this.")
+        else:
+            await self.bot.say("Please mention a user.")
 
     @commands.has_permissions(ban_members=True)
     @commands.command(pass_context=True)
