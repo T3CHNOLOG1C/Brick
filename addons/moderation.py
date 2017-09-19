@@ -57,6 +57,7 @@ class Moderation:
                 await self.bot.say("Yes daddy t3ch?")
         elif len(ctx.message.mentions) > 0:
             try:
+                member = ctx.message.mentions[0]
                 await self.bot.ban(member)
                 await self.bot.say("I've banned {}.".format(member))
             except discord.errors.Forbidden:
