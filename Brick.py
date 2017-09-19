@@ -144,28 +144,28 @@ async def pull(self, ctx, pip=None):
     Append -p or --pip to this command to also update python modules from requirements.txt.
     """
     dev = ctx.message.author
-    if self.bot.botdev_role in dev.roles or self.bot.owner_role in dev.roles:
-        await self.bot.say("`Pulling changes...`")
+    if bot.botdev_role in dev.roles or bot.owner_role in dev.roles:
+        await bot.say("`Pulling changes...`")
         call(["git", "pull"])
         pip_text = ""
         if pip == "-p" or pip == "--pip" or pip == "-Syu":
-            await self.bot.say("`Updating python dependencies...`")
+            await bot.say("`Updating python dependencies...`")
             call(["python3.6", "-m", "pip", "install", "--user", "-r",
                 "requirements.txt"])
             pip_text = " and updated python dependencies"
-        await self.bot.say("Pulled changes{}! Restarting...".format(pip_text))
+        await bot.say("Pulled changes{}! Restarting...".format(pip_text))
         execv("./Brick.py", argv)
     else:
         if "pacman" in ctx.message.content:
-            await self.bot.say("`{} is not in the sudoers file. This incident will be reported.`".format(ctx.message.author.display_name))
+            await bot.say("`{} is not in the sudoers file. This incident will be reported.`".format(ctx.message.author.display_name))
         else:
-            await self.bot.say("Only bot devs and / or owners can use this command")
+            await bot.say("Only bot devs and / or owners can use this command")
 
 @commands.has_permissions(administrator=True)
 @commands.command()
 async def restart(self):
     """Restart the bot (Staff Only)"""
-    await self.bot.say("`Restarting, please wait...`")
+    await bot.say("`Restarting, please wait...`")
     execv("./Brick.py", argv)
         
 # Run the bot
