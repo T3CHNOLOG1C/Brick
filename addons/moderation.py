@@ -55,7 +55,7 @@ class Moderation:
         if ctx.message.author == owner:
             if member == "":
                 await self.bot.say("Yes daddy t3ch?")
-        elif member not == "":
+        elif member != "":
             try:
                 await self.bot.ban(member)
                 await self.bot.say("I've banned {}.".format(member))
