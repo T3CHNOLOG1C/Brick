@@ -49,13 +49,13 @@ class Moderation:
 
     @commands.has_permissions(ban_members=True)
     @commands.command(pass_context=True)
-    async def ban(self, ctx, member=""):
+    async def ban(self, ctx, member):
         """Ban a member. (Staff Only)"""
         owner = ctx.message.server.owner
         if ctx.message.author == owner:
             if member == "":
                 await self.bot.say("Yes daddy t3ch?")
-        elif member != "":
+        elif len(ctx.message.mentions) > 0:
             try:
                 await self.bot.ban(member)
                 await self.bot.say("I've banned {}.".format(member))
