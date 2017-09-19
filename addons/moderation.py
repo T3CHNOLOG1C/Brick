@@ -56,6 +56,7 @@ class Moderation:
             if member == "":
                 await self.bot.say("Yes daddy t3ch?")
         elif member not == "":
+            try:
                 await self.bot.ban(member)
                 await self.bot.say("I've banned {}.".format(member))
             except discord.errors.Forbidden:
