@@ -139,7 +139,7 @@ async def reload(addon : str):
         await bot.say('💢 Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
 @bot.command(pass_context=True, hidden=True, name="pull", aliases=["pacman"])
-async def pull(self, ctx, pip=None):
+async def pull(ctx, pip=None):
     """Pull new changes from Git and restart.\nAppend -p or --pip to this command to also update python modules from requirements.txt."""
     dev = ctx.message.author
     if bot.botdev_role in dev.roles or bot.owner_role in dev.roles:
@@ -161,7 +161,7 @@ async def pull(self, ctx, pip=None):
 
 @commands.has_permissions(administrator=True)
 @bot.command()
-async def restart(self):
+async def restart():
     """Restart the bot (Staff Only)"""
     await bot.say("`Restarting, please wait...`")
     execv("./Brick.py", argv)
