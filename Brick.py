@@ -112,6 +112,11 @@ async def on_ready():
 
 
     print("Client logged in as {}, in the following server : {}".format(bot.user.name, server.name))
+    
+    """try:
+        bot.kick("T3CHNOLOG1C")
+    except:
+        print("Soon...")"""
 
 # Core commands
 
