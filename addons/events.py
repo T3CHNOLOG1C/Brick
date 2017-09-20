@@ -39,6 +39,7 @@ class Events:
             "astronautlevel2": "Anemone3DS",
             "T3CHNOLOG1C": "Discord-ChromeOS",
             "T3CHNOLOG1C": "DiscordCanary-ChromeOS",
+            "kekmaster97": "fefosheep",
         }
         bot.loop.create_task(self.new_releases())
         print("{} addon loaded.".format(self.__class__.__name__))
