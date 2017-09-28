@@ -84,6 +84,8 @@ class Moderation:
 
     @commands.command(pass_context=True)
     async def nsfw-mute(self, ctx, member):
+        """Mute someone in the NSFW channels. (NSFW Mod Only)"""
+        
         if self.bot.nsfw_mod_role not in ctx.author.roles:
             self.bot.say("You don't have permission.")
             return
