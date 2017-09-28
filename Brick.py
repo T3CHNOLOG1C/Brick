@@ -84,7 +84,9 @@ async def on_ready():
     # Roles
     bot.owner_role = discord.utils.get(server.roles, name="Owner")
     bot.botdev_role = discord.utils.get(server.roles, name="#botdev")
+    bot.nsfw_mod_role = discord.utils.get(server.roles, name="NSFW Mod")
     bot.nsfw_role = discord.utils.get(server.roles, name="nsfw")
+    bot.no_nsfw_role = discord.utils.get(server.roles, name="no-nsfw")
 
     # Channels
     bot.announcements_channel = discord.utils.get(server.channels, name="announcements")

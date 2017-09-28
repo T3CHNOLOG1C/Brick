@@ -82,5 +82,16 @@ class Moderation:
             except discord.errors.Forbidden:
                 await self.bot.say("💢 Couldn't ban {}".format(member))
 
+    @commands.command(pass_context=True)
+    async def nsfw-mute(self, ctx, member):
+        if self.bot.nsfw_mod_role not in ctx.author.roles:
+            self.bot.say("You don't have permission.")
+            return
+        if len(ctx.message.mentions) == 1:
+            await self.bot.add_roles(ctx.message.mentions[0], self.bot.no_nsfw_role)
+        else:
+            await self.bot.say("You can only mute 1 person at a time")
+
+
 def setup(bot):
     bot.add_cog(Moderation(bot))
