@@ -151,7 +151,7 @@ async def pull(ctx, pip=None):
         pip_text = ""
         if pip == "-p" or pip == "--pip" or pip == "-Syu":
             await ctx.send("`Updating python dependencies...`")
-            call(["python3.6", "-m", "pip", "install", "--user", "-r",
+            call(["python3.6", "-m", "pip", "install", "--user", "--upgrade", "-r",
                 "requirements.txt"])
             pip_text = " and updated python dependencies"
         await ctx.send("Pulled changes{}! Restarting...".format(pip_text))
