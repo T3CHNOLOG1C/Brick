@@ -3,8 +3,8 @@ The New Shack Secret Service Discord Bot
 
 ### Requirements :
 
-- Python 3.6
-- `pip install -r requirements.txt`
+- Python 3.6 or later
+- `pip install --upgrade -r requirements.txt`
 
 ### How to use :
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 import datetime
 
@@ -18,35 +18,35 @@ class Misc:
     async def ping(self, ctx):
         """Pong!"""
 
-        # https://github.com/appu1232/Discord-Selfbot/blob/master/cogs/misc.py#L602
-        msgtime = ctx.message.timestamp
+        # https://github.com/appu1232/Discord-Selfbot/blob/master/cogs/misc.py#L595
+        msgtime = ctx.message.created_at.now()
         await (await self.bot.ws.ping())
         now = datetime.datetime.now()
         ping = now - msgtime
-        return await self.bot.say(":ping_pong:! Response Time: {} ms".format(str(ping.microseconds / 1000.0)))
+        return await ctx.send(":ping_pong:! Response Time: {} ms".format(str(ping.microseconds / 1000.0)))
 
     @commands.command(pass_context=True, aliases=['mc'])
     async def membercount(self, ctx):
         """Prints current member count"""
-        return await self.bot.say(str(self.bot.server.name)+" currently has " + str(len(self.bot.server.members)) + " members!")
+        return await ctx.send(str(self.bot.guild.name)+" currently has " + str(len(self.bot.guild.members)) + " members!")
     
     @commands.command()
-    async def about(self):
+    async def about(self, ctx):
         """About Brick."""
-        return await self.bot.say("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
+        return await ctx.send("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
         
     @commands.command(pass_context=True)
     async def togglechannel(self, ctx, channel):
         """Toggle access to some hidden channels"""
         user = ctx.message.author
-        await self.bot.delete_message(ctx.message)
+        await ctx.message.delete()
         if channel == "nsfw":
             if self.bot.nsfw_role in user.roles:
-                await self.bot.remove_roles(user, self.bot.nsfw_role)
-                await self.bot.send_message(self.bot.nsfw_channel, "{} left this channel.".format(user.mention))
+                await user.remove_roles(self.bot.nsfw_role)
+                '''await self.bot.nsfw_channel.send("{} left this channel.".format(user.mention))'''
             else:
-                await self.bot.add_roles(user, self.bot.nsfw_role)                                             
-                await self.bot.send_message(self.bot.nsfw_channel, "{} joined this channel.".format(user.mention))  
+                await user.add_roles(self.bot.nsfw_role)                                             
+                '''await self.bot.nsfw_channel.send("{} joined this channel.".format(user.mention))'''
 
 def setup(bot):
     bot.add_cog(Misc(bot))

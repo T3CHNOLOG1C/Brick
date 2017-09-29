@@ -1,14 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 import os
 import configparser
 import asyncio
 import traceback
-import signal
-from subprocess import Popen
+from subprocess import call
 from os import execv
 from sys import argv
-from subprocess import call
+
 
 import discord
 from discord.ext import commands
@@ -24,7 +23,7 @@ if not os.path.isfile("database/github_releases.json"):
         f.write("{}")
 
 bot_prefix = ["sudo ", "."]
-bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.")
+bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.", max_messages=10000)
 
 # Eead config.ini
 config = configparser.ConfigParser()
@@ -34,34 +33,35 @@ config.read("config.ini")
 # Taken from 
 # https://github.com/916253/Kurisu/blob/31b1b747e0d839181162114a6e5731a3c58ee34f/run.py#L88
 @bot.event
-async def on_command_error(error, ctx):
+async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CommandNotFound):
         pass
     if isinstance(error, commands.errors.CheckFailure):
-        await bot.send_message(ctx.message.channel, "{} You don't have permission to use this command.".format(ctx.message.author.mention))
+        await ctx.send("{} You don't have permission to use this command.".format(ctx.message.author.mention))
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         formatter = commands.formatter.HelpFormatter()
-        await bot.send_message(ctx.message.channel, "{} You are missing required arguments.\n{}".format(ctx.message.author.mention, formatter.format_help_for(ctx, ctx.command)[0]))
+        msg = await formatter.format_help_for(ctx, ctx.command)
+        await ctx.send("{} You are missing required arguments.\n{}".format(ctx.message.author.mention, msg[0]))
     elif isinstance(error, commands.errors.CommandOnCooldown):
         try:
-            await bot.delete_message(ctx.message)
+            await ctx.message.delete()
         except discord.errors.NotFound:
             pass
-        message = await bot.send_message(ctx.message.channel, "{} This command was used {:.2f}s ago and is on cooldown. Try again in {:.2f}s.".format(ctx.message.author.mention, error.cooldown.per - error.retry_after, error.retry_after))
+        message = await ctx.send("{} This command was used {:.2f}s ago and is on cooldown. Try again in {:.2f}s.".format(ctx.message.author.mention, error.cooldown.per - error.retry_after, error.retry_after))
         await asyncio.sleep(10)
-        await bot.delete_message(message)
+        await ctx.message.delete()
     else:
-        await bot.send_message(ctx.message.channel, "An error occured while processing the `{}` command.".format(ctx.command.name))
+        await ctx.send("An error occured while processing the `{}` command.".format(ctx.command.name))
         print('Ignoring exception in command {0.command} in {0.message.channel}'.format(ctx))
         mods_msg = "Exception occured in `{0.command}` in {0.message.channel.mention}".format(ctx)
         # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
         tb = traceback.format_exception(type(error), error, error.__traceback__)
         print(''.join(tb))
-        await bot.send_message(bot.botdev_channel, mods_msg + '\n```' + ''.join(tb) + '\n```')
+        await ctx.send(mods_msg + '\n```' + ''.join(tb) + '\n```')
 
 
 @bot.event
-async def on_error(event_method, *args, **kwargs):
+async def on_error(ctx, event_method, *args, **kwargs):
     if isinstance(args[0], commands.errors.CommandNotFound):
         return
     print('Ignoring exception in {}'.format(event_method))
@@ -70,7 +70,7 @@ async def on_error(event_method, *args, **kwargs):
     print(''.join(tb))
     mods_msg += '\n```' + ''.join(tb) + '\n```'
     mods_msg += '\nargs: `{}`\n\nkwargs: `{}`'.format(args, kwargs)
-    await bot.send_message(bot.botdev_channel, mods_msg)
+    await ctx.send(mods_msg)
     print(args)
     print(kwargs)
 
@@ -78,10 +78,11 @@ async def on_error(event_method, *args, **kwargs):
 @bot.event
 async def on_ready():
 
-    for server in bot.servers:
-        bot.server = server
+    for guild in bot.guilds:
+        bot.guild = guild
 
     # Roles
+
     bot.owner_role = discord.utils.get(server.roles, name="Owner")
     bot.botdev_role = discord.utils.get(server.roles, name="#botdev")
     bot.nsfw_mod_role = discord.utils.get(server.roles, name="NSFW Mod")
@@ -89,21 +90,21 @@ async def on_ready():
     bot.no_nsfw_role = discord.utils.get(server.roles, name="no-nsfw")
 
     # Channels
-    bot.announcements_channel = discord.utils.get(server.channels, name="announcements")
-    bot.botdev_channel = discord.utils.get(server.channels, name="botdev")
-    bot.nsfw_channel = discord.utils.get(server.channels, name="nsfw")
-    bot.brickdms_channel = discord.utils.get(server.channels, name="brick-dms")
-    bot.logs_channel = discord.utils.get(server.channels, name="admin-logs")
+    bot.announcements_channel = discord.utils.get(guild.channels, name="announcements")
+    bot.botdev_channel = discord.utils.get(guild.channels, name="botdev")
+    bot.nsfw_channel = discord.utils.get(guild.channels, name="nsfw")
+    bot.brickdms_channel = discord.utils.get(guild.channels, name="brick-dms")
+    bot.logs_channel = discord.utils.get(guild.channels, name="admin-logs")
 
     # Load addons
     addons = [
-         'addons.memes',
-         'addons.misc',
-         'addons.rules',
-         'addons.online',
-         'addons.moderation',
-         'addons.events',
-         'addons.speak',
+        'addons.memes',
+        'addons.misc',
+        'addons.rules',
+        'addons.online',
+        'addons.moderation',
+        'addons.events',
+        'addons.speak',
      ]
 
     for addon in addons:
@@ -113,65 +114,60 @@ async def on_ready():
             print("Failed to load {} :\n{} : {}".format(addon, type(e).__name__, e))
 
 
-    print("Client logged in as {}, in the following server : {}".format(bot.user.name, server.name))
+    print("Client logged in as {}, in the following guild : {}".format(bot.user.name, guild.name))
     
-    """try:
-        bot.kick("T3CHNOLOG1C")
-    except:
-        print("Soon...")"""
-
 # Core commands
 
 @commands.has_permissions(administrator=True)
 @bot.command(hidden=True)
-async def unload(addon: str):
+async def unload(ctx, addon: str):
     """Unloads an addon."""
     try:
         addon = "addons." + addon
         bot.unload_extension(addon)
-        await bot.say('✅ Addon unloaded.')
+        await ctx.send('✅ Addon unloaded.')
     except Exception as e:
-        await bot.say('💢 Error trying to unload the addon:\n```\n{}: {}\n```'.format(type(e).__name__, e))
+        await ctx.send('💢 Error trying to unload the addon:\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
 @commands.has_permissions(administrator=True)
 @bot.command(name='reload', aliases=['load'], hidden=True)
-async def reload(addon : str):
+async def reload(ctx, addon : str):
     """(Re)loads an addon."""
     try:
         addon = "addons." + addon
         bot.unload_extension(addon)
         bot.load_extension(addon)
-        await bot.say('✅ Addon reloaded.')
+        await ctx.send('✅ Addon reloaded.')
     except Exception as e:
-        await bot.say('💢 Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
+        await ctx.send('💢 Failed!\n```\n{}: {}\n```'.format(type(e).__name__, e))
 
-@bot.command(pass_context=True, hidden=True, name="pull", aliases=["pacman"])
+@bot.command(hidden=True, name="pull", aliases=["pacman"])
 async def pull(ctx, pip=None):
     """Pull new changes from Git and restart.\nAppend -p or --pip to this command to also update python modules from requirements.txt."""
     dev = ctx.message.author
     if bot.botdev_role in dev.roles or bot.owner_role in dev.roles:
-        await bot.say("`Pulling changes...`")
+        await ctx.send("`Pulling changes...`")
         call(["git", "pull"])
         pip_text = ""
         if pip == "-p" or pip == "--pip" or pip == "-Syu":
-            await bot.say("`Updating python dependencies...`")
+            await ctx.send("`Updating python dependencies...`")
             call(["python3.6", "-m", "pip", "install", "--user", "-r",
                 "requirements.txt"])
             pip_text = " and updated python dependencies"
-        await bot.say("Pulled changes{}! Restarting...".format(pip_text))
+        await ctx.send("Pulled changes{}! Restarting...".format(pip_text))
         execv("./Brick.py", argv)
     else:
         if "pacman" in ctx.message.content:
-            await bot.say("`{} is not in the sudoers file. This incident will be reported.`".format(ctx.message.author.display_name))
+            await ctx.send("`{} is not in the sudoers file. This incident will be reported.`".format(ctx.message.author.display_name))
         else:
-            await bot.say("Only bot devs and / or owners can use this command")
+            await ctx.send("Only bot devs and / or owners can use this command")
 
 @commands.has_permissions(administrator=True)
 @bot.command()
-async def restart():
+async def restart(ctx):
     """Restart the bot (Staff Only)"""
-    await bot.say("`Restarting, please wait...`")
+    await ctx.send("`Restarting, please wait...`")
     execv("./Brick.py", argv)
         
 # Run the bot
-bot.run(config['Main']['token'], max_messages=10000)
+bot.run(config['Main']['token'])

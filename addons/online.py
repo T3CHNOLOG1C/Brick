@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 import configparser
 from urllib.parse import urlencode
@@ -19,7 +19,7 @@ class Online:
         print("{} addon loaded.".format(self.__class__.__name__))
 
     @commands.command()
-    async def urban(self, *, term=None):
+    async def urban(self, ctx, *, term=None):
         """
         Lookup a term on Urban Dictionnary. If no term is specified, returns a random definition. 
         Use a comma followed by a number to specify the definition that should be returned.
@@ -81,25 +81,25 @@ class Online:
                     embed.add_field(name="Upvotes", value="👍 **{}**".format(thumbsup), inline=True)
                     embed.add_field(name="Downvotes", value="👎 **{}**\n\n".format(thumbsdown), inline=True)
                     embed.set_footer(text="Defined by {0}".format(author))
-                    await self.bot.say(embed=embed)
+                    await ctx.send(embed=embed)
                 except (discord.errors.Forbidden, discord.errors.HTTPException):
-                    await self.bot.say("**__Definition of {0}__**__ ({1})__\n\n\n".format(word, permalink) + definition + "\n\n" + "__Example(s) :__\n\n" + textExamples + "\n\n\n" + str(thumbsup) + " 👍\n\n" + str(thumbsdown) + " 👎\n\n\n\n" + "*Defined by " + author + "*")
+                    await ctx.send("**__Definition of {0}__**__ ({1})__\n\n\n".format(word, permalink) + definition + "\n\n" + "__Example(s) :__\n\n" + textExamples + "\n\n\n" + str(thumbsup) + " 👍\n\n" + str(thumbsdown) + " 👎\n\n\n\n" + "*Defined by " + author + "*")
             except ValueError:
-                await self.bot.say("`Invalid syntax. If you want to specify which definition should be returned, use the following syntax :\n\".urban [term], [number]\"`")
+                await ctx.send("`Invalid syntax. If you want to specify which definition should be returned, use the following syntax :\n\".urban [term], [number]\"`")
             except IndexError:
-                await self.bot.say("The specified definition does not exist! There are less than {} definitons for this term!".format(n))
+                await ctx.send("The specified definition does not exist! There are less than {} definitons for this term!".format(n))
         else:
             try:
                 embed = discord.Embed(title="¯\_(ツ)_/¯", colour=discord.Color.blue())
                 embed.url = "http://www.urbandictionary.com/define.php?term={}".format(term.replace(" ", "%20"))
                 embed.description = "\nThere aren't any definitions for *{0}* yet.\n\n[Can you define it?](http://www.urbandictionary.com/add.php?word={1})\n".format(term, term.replace(" ", "%20"))
                 embed.set_footer(text="Error 404", icon_url="http://i.imgur.com/w6TtWHK.png")
-                await self.bot.say(embed=embed)
+                await ctx.send(embed=embed)
             except discord.errors.Forbidden:
-                await self.bot.say("¯\_(ツ)_/¯\n\n\n" + "There are no definitions for *{}* yet\n\n".format(term) + "Can you define it ?\n( http://www.urbandictionary.com/add.php?word={} )".format(term.replace(" ", "%20")))
+                await ctx.send("¯\_(ツ)_/¯\n\n\n" + "There are no definitions for *{}* yet\n\n".format(term) + "Can you define it ?\n( http://www.urbandictionary.com/add.php?word={} )".format(term.replace(" ", "%20")))
 
     @commands.command(name='whats', aliases=["what", "what's"])
-    async def whats(self, *, term):
+    async def whats(self, ctx, *, term):
         """Defines / explains stuff"""
 
         #Read config for Google API Key
@@ -108,7 +108,7 @@ class Online:
         try:
             apiKey = config['Google']['API_Key']
         except KeyError:
-            await self.bot.say("You did not mention a Google kgsearch API Key in the config.ini file! Please set up one here : https://console.developers.google.com/project/_/apiui/credential")
+            await ctx.send("You did not mention a Google kgsearch API Key in the config.ini file! Please set up one here : https://console.developers.google.com/project/_/apiui/credential")
 
 
         if term[0:2] == "a " and term != "a":
@@ -127,7 +127,7 @@ class Online:
         term = capwords(term)
 
         if len(term) > 300:
-            return await self.bot.say("Request is too long!")
+            return await ctx.send("Request is too long!")
 
         if term.lower() == "kai" or term.lower() == "mitchy":
             kai = await self.bot.get_user_info("272908611255271425")
@@ -135,9 +135,9 @@ class Online:
                 embed = discord.Embed(title="Kai", colour=discord.Color.blue())
                 embed.set_thumbnail(url=kai.avatar_url)
                 embed.description = "An edgy kid that spends too much time on tumblr, previously named mitchy, previously named sans-serif"
-                await self.bot.say(embed=embed)
+                await ctx.send(embed=embed)
             except discord.errors.Forbidden:
-                await self.bot.say("**__Kai :__**\n\nAn edgy kid that spends too much time on tumblr, previously named mitchy, previously named sans-serif")
+                await ctx.send("**__Kai :__**\n\nAn edgy kid that spends too much time on tumblr, previously named mitchy, previously named sans-serif")
         elif term.lower() == "ubuntu":
             embed = discord.Embed(title="Ubuntu", colour=discord.Color.blue())
             embed.set_thumbnail(url="http://i.imgur.com/B1gZbQz.png")
@@ -146,20 +146,20 @@ class Online:
             embed.add_field(name="__Example :__", value="I installed Ubuntu yesterday, it was way more easier than Debian", inline=False)
             embed.set_footer(text="Defined by oSuperDaveo")
             try:
-                await self.bot.say(embed=embed)
+                await ctx.send(embed=embed)
             except discord.errors.Forbidden:
-                await self.bot.say("**__Ubuntu :__**\n\n{}\n\n__Example :__\nI installed Ubuntu yesterday, it was way more easier than Debian.\n\n*Defined by oSuperDaveo*".format(embed.description))
+                await ctx.send("**__Ubuntu :__**\n\n{}\n\n__Example :__\nI installed Ubuntu yesterday, it was way more easier than Debian.\n\n*Defined by oSuperDaveo*".format(embed.description))
         elif term.lower() == "t3chnolog1c" or term.lower() == "t3ch":
             t3ch = await self.bot.get_user_info("208370244207509504")
             try:
                 embed = discord.Embed(title="T3CHNOLOG1C", colour=discord.Color.blue())
                 embed.set_thumbnail(url=t3ch.avatar_url)
                 embed.description = "The cancerous retard that runs this server."
-                await self.bot.say(embed=embed)
+                await ctx.send(embed=embed)
             except discord.errors.Forbidden:
-                await self.bot.say("**__T3CHNOLOG1C :__**\n\nThe cancerous retard that runs this server.")
+                await ctx.send("**__T3CHNOLOG1C :__**\n\nThe cancerous retard that runs this server.")
         elif term.lower() == "are you":
-            return await self.bot.say("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
+            return await ctx.send("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
 
         else:
             exception = False
@@ -181,9 +181,9 @@ class Online:
                         embed.description = wiki.summary
                 embed.set_footer(text="From Wikipedia", icon_url="http://i.imgur.com/DO4wDN4.png")
                 try: 
-                    await self.bot.say(embed=embed)
+                    await ctx.send(embed=embed)
                 except:
-                    await self.bot.say("**__{}__**\n\n\n{}\n\n*Link : {}*".format(term, embed.description, permalink))
+                    await ctx.send("**__{}__**\n\n\n{}\n\n*Link : {}*".format(term, embed.description, permalink))
                 #Images soon
 
             except wikipedia.exceptions.PageError:
@@ -251,23 +251,23 @@ class Online:
                         embed.set_footer(text="From Google Graph Knowledge", icon_url="http://i.imgur.com/2obljmu.png")
                     
                         try:
-                            await self.bot.say(embed=embed)
+                            await ctx.send(embed=embed)
                         except:
-                            await self.bot.say("__**{}** ({})__\n\n{}\n\n\n*{}*\n\n{}\n".format(name, permalink, briefDescription, detailedDescription, image))
+                            await ctx.send("__**{}** ({})__\n\n{}\n\n\n*{}*\n\n{}\n".format(name, permalink, briefDescription, detailedDescription, image))
 
                         if disambig is True:
-                            await self.bot.say("If this is not the definition you wanted, try being a bit more precise next time. `{}` can refer to many things!".format(term))
+                            await ctx.send("If this is not the definition you wanted, try being a bit more precise next time. `{}` can refer to many things!".format(term))
                     else:
-                        await self.bot.say("Sorry, none of my sources have an explanation for this term :(")
+                        await ctx.send("Sorry, none of my sources have an explanation for this term :(")
                         #Coming soon : WikiData and urban dictionnary support
 
                 except KeyError:
                     if js["error"]["code"] == 403: #Checks if API Key is specified
-                        await self.bot.say("You did not mention a Google kgsearch API Key in the config.ini file! Please set up one here : https://console.developers.google.com/project/_/apiui/credential")
+                        await ctx.send("You did not mention a Google kgsearch API Key in the config.ini file! Please set up one here : https://console.developers.google.com/project/_/apiui/credential")
                     elif js["error"]["message"] == "API key not valid. Please pass a valid API key.": #Checks if API Key is valid
-                        await self.bot.say("The mentioned Google kgsearch API Key is invalid! Please set up a correct API Key here : https://console.developers.google.com/project/_/apiui/credential")
+                        await ctx.send("The mentioned Google kgsearch API Key is invalid! Please set up a correct API Key here : https://console.developers.google.com/project/_/apiui/credential")
                     else:
-                        await self.bot.say("Invalid request. Stop trying to break the bot you shit.")
+                        await ctx.send("Invalid request. Stop trying to break the bot you shit.")
 
 def setup(bot):
     bot.add_cog(Online(bot))

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 import configparser
 import json
@@ -41,57 +41,48 @@ class Events:
             "T3CHNOLOG1C": "DiscordCanary-ChromeOS",
             "kekmaster97": "fefosheep",
         }
-        bot.loop.create_task(self.new_releases())
         print("{} addon loaded.".format(self.__class__.__name__))
     
     # Events
     new_releases_active = True
-    h_active = True
     receive_dms = True
 
     @commands.has_permissions(administrator=True)
     @commands.command()
-    async def toggleevent(self, param):
+    async def toggleevent(self, ctx, param):
         """
         Make events active or not
         """
         if param == "new_releases":
             if self.new_releases_active is True:
                 self.new_releases_active = False
-                await self.bot.say("Stopped checking for new github releases!")
+                await ctx.send("Stopped checking for new github releases!")
             else:
                 self.new_releases_active = True
-                await self.bot.say("Started checking for new github releases!")
-
-        elif param == "h":		
-            if self.h_active is True:		
-                self.h_active = False		
-                await self.bot.say("I will now stop responding to `h`.")		
-            else:		
-                self.h_active = True		
-                await self.bot.say("I will now start responding to `h`.")
+                await ctx.send("Started checking for new github releases!")
 
         elif param == "receive_dms":
             if self.receive_dms is True:
                 self.receive_dms = False
-                await self.bot.say("Received DMs will now be ignored")
+                await ctx.send("Received DMs will now be ignored")
             else:
                 self.receive_dms = True
-                await self.bot.say("Received DMs will now be transmitted in <#353101401880264704>!")
+                await ctx.send("Received DMs will now be transmitted in <#353101401880264704>!")
 
         elif param == "list":
-            await self.bot.say("__List of events :__\n\n- new_releases : {}\n- h : {}".format(
-                    "**Active**" if self.new_releases_active else "*Inactive*", "**Active**" if self.h_active else "*Inactive*"))
+            await ctx.send("__List of events :__\n\n- new_releases : {}\n- receive_dms : {}".format(
+                    "**Active**" if self.new_releases_active else "*Inactive*",
+                    "**Active**" if self.receive_dms else "*Inactive*"
+                    ))
         else:
-            await self.bot.say("This event doesn't exist!"
-                                + " Use `toggleevent list` to list every event.")
+            await ctx.send("This event doesn't exist! Use `toggleevent list` to list every event.")
 
     async def new_releases(self):
         """
         Check for new GitHub releases of specified repositories
         """
         await self.bot.wait_until_ready()
-        while not self.bot.is_closed and self.new_releases_active:
+        while self.new_releases_active:
 
             timestamp = datetime.datetime.now()
             if timestamp.minute % 2 == 0 and timestamp.second == 0:
@@ -135,10 +126,7 @@ class Events:
                             authorship = str(soup.find('p', attrs={'class': 'release-authorship'}))
 
                             if "released this" in authorship and "tagged this" not in authorship:
-                                await self.bot.send_message(
-                                    self.bot.announcements_channel,
-                                    "{} {} released: {}".format(repo, tag, permalink)
-                                )
+                                await self.bot.announcements_channel.send("{} {} released: {}".format(repo, tag, permalink))
 
                             js['{}/{}'.format(owner, repo)] = [
                                 latest['updated'], latest['id']
@@ -162,50 +150,50 @@ class Events:
     def formatMessage(self, message):
         """Build a nicely formatted string from a message we want to log"""
 
-        message_id = "Edited: {}".format(message.id) if message.edited_timestamp else message.id
+        message_id = "Edited: {}".format(message.id) if message.edited_at else message.id
 
-        timestamp = message.edited_timestamp if message.edited_timestamp else message.timestamp
+        timestamp = message.edited_at if message.edited_at else message.created_at
         timestamp = strftime('[%F %H:%M:%S]')
 
-        author = message.channel.recipients[0].mention
+        author = message.channel.recipient.mention
 
         content = message.content
 
-        attachments = ' '.join([attachment['url'] for attachment in message.attachments])
+        attachments = ' '.join([attachment.url for attachment in message.attachments])
 
-        return("__**({})**  **{}**  **{}** {}:__\n\n{} {}".format(message_id, timestamp, "📤 To" if message.author.id == "332895977570566144" else "📥 From", author, content, attachments))
+        return("__**({})**  **{}**  **{}** {}:__\n\n{} {}".format(message_id, timestamp, "📤 To" if message.author.id == self.bot.user.id else "📥 From", author, content, attachments))
 
     async def on_message(self, message):
 
-        if message.content == "h" and message.author != self.bot.user and message.channel.id == '339954307887529985' and self.h_active:
-            await self.bot.send_message(message.channel, "h")
-        
-        if message.channel.is_private and self.receive_dms:
+        if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms:
             msg = self.formatMessage(message)
             if len(msg) > 2000:
-                await self.bot.send_message(self.bot.brickdms_channel, msg[:2000])
-                await self.bot.send_message(self.bot.brickdms_channel, msg[2000:])
+                await self.bot.brickdms_channel.send(msg[:2000])
+                await self.bot.brickdms_channel.send(msg[2000:])
             else:
-                await self.bot.send_message(self.bot.brickdms_channel, msg)
+                await self.bot.brickdms_channel.send(msg)
                       
         # auto kick on 15+ pings
         if len(message.mentions) > 15:
             embed = discord.Embed(description=message.content)
-            await self.bot.delete_message(message)
-            await self.bot.kick_member(message.author)
-            await self.bot.send_message(message.channel, "{} was kicked for trying to spam ping users.".format(message.author))
-            await self.bot.send_message(self.bot.logs_channnel, "{} was kicked for trying to spam ping users.".format(message.author))
-            await self.bot.send_message(self.bot.logs_channel, embed=embed)
+            await message.delete()
+            await message.author.kick()
+            await message.channel.send("{} was kicked for trying to spam ping users.".format(message.author))
+            await self.bot.logs_channel.send("{} was kicked for trying to spam ping users.".format(message.author))
+            await self.bot.logs_channel.send("", embed=embed)
 
     async def on_message_edit(self, _, message):
 
-        if message.channel.is_private and self.receive_dms:
+        if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms:
             msg = self.formatMessage(message)
             if len(msg) > 2000:
-                await self.bot.send_message(self.bot.brickdms_channel, msg[:2000])
-                await self.bot.send_message(self.bot.brickdms_channel, msg[2000:])
+                await self.bot.brickdms_channel.send(msg[:2000])
+                await self.bot.brickdms_channel.send(msg[2000:])
             else:
-                await self.bot.send_message(self.bot.brickdms_channel, msg)
+                await self.bot.brickdms_channel.send(msg)
 
-def setup(bot):
-    bot.add_cog(Events(bot))
+def setup(bot): 
+    event_cog = Events(bot)
+    loop = asyncio.get_event_loop()
+    loop.create_task(event_cog.new_releases())
+    bot.add_cog(event_cog)

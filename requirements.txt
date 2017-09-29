@@ -1,12 +1,8 @@
-discord.py==0.16.10
+
+git+https://github.com/Rapptz/discord.py@rewrite
 requests
 wikipedia
 requests
 beautifulsoup4
 lxml
 feedparser
-
-discord.py[voice] ~= 0.12.0
-youtube_dl
-cffi==1.6.0
-pynacl
