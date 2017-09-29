@@ -147,7 +147,9 @@ async def pull(ctx, pip=None):
     dev = ctx.message.author
     if bot.botdev_role in dev.roles or bot.owner_role in dev.roles:
         await ctx.send("`Pulling changes...`")
+        call(["git", "stash", "save"])
         call(["git", "pull"])
+        call(["git", "stash", "clear"])
         pip_text = ""
         if pip == "-p" or pip == "--pip" or pip == "-Syu":
             await ctx.send("`Updating python dependencies...`")
