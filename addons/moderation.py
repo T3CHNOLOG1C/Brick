@@ -114,9 +114,11 @@ class Moderation:
         try:
             member = ctx.message.mentions[0]
         except IndexError:
-            await ctx.send("Please mention a user.")
-            return
+            return await ctx.send("Please mention a user.")
         
+        if self.bot.nsfw_muted_role in member.roles:
+            return await ctx.send("{} is already muted!".format(member))
+
         try:
             await member.add_roles(self.bot.nsfw_muted_role, reason="Muted {} in the nsfw channels. (Requested by {})".format(
                 member, ctx.message.author
@@ -125,6 +127,29 @@ class Moderation:
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
         
+    @nsfw.command()
+    async def unmute(self, ctx, member):
+        """Allow someone to send messages in NSFW channels again (NSFW mods only)"""
+
+        has_perms = await self.checkNsfwModPerms(ctx)
+        if not has_perms:
+            return
+
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            return await ctx.send("Please mention a user.")
+
+        if self.bot.nsfw_muted_role not in member.roles:
+            return await ctx.send("{} isn't muted!".format(member))
+
+        try:
+            await member.add_roles(self.bot.nsfw_muted_role, reason="Unmuted {} in the nsfw channels. (Requested by {})".format(
+                member, ctx.message.author
+                ))
+            await ctx.send("{} can now speak again in NSFW channels!".format(member))
+        except discord.errors.Forbidden:
+            await ctx.send("💢 I dont have permission to do this.")
 
 
 def setup(bot):
