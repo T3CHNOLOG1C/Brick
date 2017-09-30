@@ -87,14 +87,15 @@ async def on_ready():
     bot.botdev_role = discord.utils.get(guild.roles, name="#botdev")
     bot.nsfw_mod_role = discord.utils.get(guild.roles, name="NSFW Mod")
     bot.nsfw_role = discord.utils.get(guild.roles, name="nsfw")
+    bot.nsfw_muted_role = discord.utils.get(guild.roles, name="nsfw-muted")
     bot.no_nsfw_role = discord.utils.get(guild.roles, name="no-nsfw")
 
     # Channels
     bot.announcements_channel = discord.utils.get(guild.channels, name="announcements")
     bot.botdev_channel = discord.utils.get(guild.channels, name="botdev")
-    bot.nsfw_channel = discord.utils.get(guild.channels, name="nsfw")
     bot.brickdms_channel = discord.utils.get(guild.channels, name="brick-dms")
     bot.logs_channel = discord.utils.get(guild.channels, name="admin-logs")
+    bot.nsfw_channels = discord.utils.get(guild.channels, name="nsfw")
 
     # Load addons
     addons = [

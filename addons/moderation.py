@@ -17,7 +17,7 @@ class Moderation:
         print("{} addon loaded.".format(self.__class__.__name__))
 
     @commands.has_permissions(kick_members=True)
-    @commands.command(pass_context=True)
+    @commands.command()
     async def kick(self, ctx, member):
         """Kick a member. (Staff Only)"""
         try:
@@ -32,7 +32,7 @@ class Moderation:
             await ctx.send("💢 I dont have permission to do this.")
             
     @commands.has_permissions(kick_members=True)
-    @commands.command(pass_context=True)
+    @commands.command()
     async def multikick(self, ctx, *, members):
         """Kick multiple members. (Staff Only)"""
         try:
@@ -48,7 +48,7 @@ class Moderation:
                 await ctx.send("💢 Couldn't kick {}".format(member))
 
     @commands.has_permissions(ban_members=True)
-    @commands.command(pass_context=True)
+    @commands.command()
     async def ban(self, ctx, member=""):
         """Ban a member. (Staff Only)"""
         owner = ctx.message.guild.owner
@@ -66,7 +66,7 @@ class Moderation:
                 await ctx.send("💢 I dont have permission to do this.")
 
     @commands.has_permissions(ban_members=True)
-    @commands.command(pass_context=True)
+    @commands.command()
     async def multiban(self, ctx, *, members):
         """Ban many members. (Staff Only)"""
 
@@ -81,6 +81,51 @@ class Moderation:
                 await ctx.send("Banned {}.".format(member))
             except discord.errors.Forbidden:
                 await ctx.send("💢 Couldn't ban {}".format(member))
+
+    # NSFW-MODERATION COMMANDS
+
+    @commands.group()
+    async def nsfw(self, ctx):
+        """NSFW moderation commands"""
+
+        if ctx.invoked_subcommand is None:
+            return await ctx.send("`Missing requirements. Please use .help nsfw`")
+
+    async def checkNsfwModPerms(self, ctx):
+        """Check if the member using a NSFW moderation command has the permission to do so."""
+
+        if not ctx.message.author.permissions_in(self.bot.nsfw_channels).manage_messages:
+            await ctx.send("{} You don't have permission to use this command.".format(ctx.message.author.mention))
+            return(False)
+        if ctx.message.mentions[0].permissions_in(self.bot.nsfw_channels).manage_messages:
+            await ctx.send("{} You cannot use NSFW moderation commands on other NSFW mods!".format(ctx.message.author.mention))
+            return(False)
+        return(True)
+
+
+    @nsfw.command()
+    async def mute(self, ctx, member):
+        """Prevent someone from sending messages in NSFW channels (NSFW mods only)"""
+
+        has_perms = await self.checkNsfwModPerms(ctx)
+        if not has_perms:
+            return
+
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            await ctx.send("Please mention a user.")
+            return
+        
+        try:
+            await member.add_roles(self.bot.nsfw_muted_role, reason="Muted {} in the nsfw channels. (Requested by {})".format(
+                member, ctx.message.author
+                ))
+            await ctx.send("{} can no longer speak in NSFW channels!".format(member))
+        except discord.errors.Forbidden:
+            await ctx.send("💢 I dont have permission to do this.")
+        
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
