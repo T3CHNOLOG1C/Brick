@@ -40,6 +40,7 @@ class Events:
             "T3CHNOLOG1C": "Discord-ChromeOS",
             "T3CHNOLOG1C": "DiscordCanary-ChromeOS",
             "kekmaster97": "fefosheep",
+            "BernardoGiordano": "Checkpoint",
         }
         print("{} addon loaded.".format(self.__class__.__name__))
     
