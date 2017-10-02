@@ -64,5 +64,23 @@ class Misc:
                 await user.add_roles(self.bot.nsfw_role)                                             
                 '''await self.bot.nsfw_channel.send("{} joined this channel.".format(user.mention))'''
 
+
+    @commands.has_permissions(manage_messages=True)
+    @commands.command()
+    async def clear(self, ctx, amount):
+        """Clears a given amount of messages. (Mods only)"""
+
+        channel = ctx.message.channel
+        try:
+            n = int(amount) + 1
+        except ValueError:
+            return await ctx.send("Please mention a valid amount of messages!")
+
+        try:
+            await channel.purge(limit=n)
+            await ctx.send("🗑️ Cleared {} messages in this channel!".format(amount))
+        except discord.errors.Forbidden:
+            await ctx.say("💢 I don't have permission to do this.")
+
 def setup(bot):
     bot.add_cog(Misc(bot))
