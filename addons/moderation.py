@@ -220,6 +220,31 @@ class Moderation:
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
+    @nsfw.command(name="unban")
+    async def nsfw_unban(self, ctx, member):
+        """Ban someone from the NSFW channels."""
 
+        has_perms = await self.checkNsfwModPerms(ctx)
+        if not has_perms:
+            return
+
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            return await ctx.send("Please mention a user.")
+
+        if self.bot.no_nsfw_role not in member.roles:
+            return await ctx.send("{} isn't banned from NSFW channels!".format(member))
+
+        try:
+            await member.add_roles(self.bot.nsfw_role, reason="Unbanned from the NSFW channels by {}.".format(ctx.message.author))
+            await member.remove_roles(self.bot.no_nsfw_role, reason="Unbanned from the NSFW channels by {}.".format(ctx.message.author))
+            await ctx.send("Unbanned {} from the NSFW channels.".format(member))
+            try:
+                await member.send("You have been unbanned from the SSS NSFW channels.")
+            except:
+                pass
+        except discord.errors.Forbidden:
+            await ctx.send("💢 I dont have permission to do this.")
 def setup(bot):
     bot.add_cog(Moderation(bot))
