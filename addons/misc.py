@@ -45,12 +45,18 @@ class Misc:
         await ctx.message.delete()
 
         if self.bot.mcubrick_role in user.roles:
-            return await ctx.send("This channel doesn't exist!") # (͡° ͜ʖ ͡°)
+            try:
+                return await user.send("{} This channel doesn't exist!") # (͡° ͜ʖ ͡°)
+            except:
+                pass
         
         if channel == "nsfw":
             if self.bot.no_nsfw_role in user.roles:
-                return await ctx.send("You are banned from the NSFW channels!")
-            
+                try:
+                    return await user.send("You are banned from the NSFW channels!")
+                except:
+                    pass
+
             if self.bot.nsfw_role in user.roles:
                 await user.remove_roles(self.bot.nsfw_role)
                 '''await self.bot.nsfw_channel.send("{} left this channel.".format(user.mention))'''
