@@ -28,19 +28,29 @@ class Misc:
     @commands.command(pass_context=True, aliases=['mc'])
     async def membercount(self, ctx):
         """Prints current member count"""
+
         return await ctx.send(str(self.bot.guild.name)+" currently has " + str(len(self.bot.guild.members)) + " members!")
     
     @commands.command()
     async def about(self, ctx):
         """About Brick."""
+
         return await ctx.send("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
         
     @commands.command(pass_context=True)
     async def togglechannel(self, ctx, channel):
         """Toggle access to some hidden channels"""
+
         user = ctx.message.author
         await ctx.message.delete()
+
+        if self.bot.mcubrick_role in user.roles:
+            return await ctx.send("This channel doesn't exist!") # (͡° ͜ʖ ͡°)
+        
         if channel == "nsfw":
+            if self.bot.no_nsfw_role in user.roles:
+                return await ctx.send("You are banned from the NSFW channels!")
+            
             if self.bot.nsfw_role in user.roles:
                 await user.remove_roles(self.bot.nsfw_role)
                 '''await self.bot.nsfw_channel.send("{} left this channel.".format(user.mention))'''
