@@ -103,8 +103,8 @@ class Moderation:
         return(True)
 
 
-    @nsfw.command()
-    async def mute(self, ctx, member):
+    @nsfw.command(name="mute")
+    async def nsfw_mute(self, ctx, member):
         """Prevent someone from sending messages in NSFW channels (NSFW mods only)"""
 
         has_perms = await self.checkNsfwModPerms(ctx)
@@ -127,8 +127,8 @@ class Moderation:
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
         
-    @nsfw.command()
-    async def unmute(self, ctx, member):
+    @nsfw.command(name="unmute")
+    async def nsfw_unmute(self, ctx, member):
         """Allow someone to send messages in NSFW channels again (NSFW mods only)"""
 
         has_perms = await self.checkNsfwModPerms(ctx)
@@ -151,8 +151,8 @@ class Moderation:
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
-    @nsfw.command()
-    async def kick(self, ctx, member):
+    @nsfw.command(name="kick")
+    async def nsfw_kick(self, ctx, member):
         """
         Kick someone from the NSFW channels.
         They can rejoin with .togglechannel nsfw
