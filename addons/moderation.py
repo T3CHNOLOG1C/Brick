@@ -184,9 +184,9 @@ class Moderation:
             await member.remove_roles(self.bot.nsfw_role, reason="Kicked from the NSFW channels by {}.".format(
                 ctx.message.author
                 ))
-            await ctx.send("Kicked {} from the NSFW channels. They can rejoin whenever with `.togglechannel nsfw`".format(member))
+            await ctx.send("Kicked {} from the NSFW channels. They can rejoin whenever with .togglechannel nsfw".format(member))
             try:
-                await member.send("You have been kicked from the SSS NSFW channels.\nYou can join the channels back whenever you want with the ´.togglechannel` command.")
+                await member.send("You have been kicked from the SSS NSFW channels.\nYou can join the channels back whenever you want with the `.togglechannel` command.")
             except:
                 pass
         except discord.errors.Forbidden:
