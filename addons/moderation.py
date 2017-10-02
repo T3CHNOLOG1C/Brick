@@ -120,8 +120,8 @@ class Moderation:
             return await ctx.send("{} is already muted!".format(member))
 
         try:
-            await member.add_roles(self.bot.nsfw_muted_role, reason="Muted {} in the nsfw channels. (Requested by {})".format(
-                member, ctx.message.author
+            await member.add_roles(self.bot.nsfw_muted_role, reason="Muted in the nsfw channels by {}.".format(
+                ctx.message.author
                 ))
             await ctx.send("{} can no longer speak in NSFW channels!".format(member))
         except discord.errors.Forbidden:
@@ -144,10 +144,37 @@ class Moderation:
             return await ctx.send("{} isn't muted!".format(member))
 
         try:
-            await member.add_roles(self.bot.nsfw_muted_role, reason="Unmuted {} in the nsfw channels. (Requested by {})".format(
-                member, ctx.message.author
+            await member.remove_roles(self.bot.nsfw_muted_role, reason="Unmuted in the NSFW channels by {}.".format(
+                ctx.message.author
                 ))
             await ctx.send("{} can now speak again in NSFW channels!".format(member))
+        except discord.errors.Forbidden:
+            await ctx.send("💢 I dont have permission to do this.")
+
+    @nsfw.command()
+    async def kick(self, ctx, member):
+        """
+        Kick someone from the NSFW channels.
+        They can rejoin with .togglechannel nsfw
+        """
+
+        has_perms = await self.checkNsfwModPerms(ctx)
+        if not has_perms:
+            return
+
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            return await ctx.send("Please mention a user.")
+
+        if self.bot.nsfw not in member.roles:
+            return await ctx.send("{} isn't in the NSFW!".format(member))
+
+        try:
+            await member.remove_roles(self.bot.nsfw_role, reason="Kicked from the NSFW channels by {}.".format(
+                ctx.message.author
+                ))
+            await ctx.send("Kicked {} from the NSFW channels. They can rejoin whenever with `.togglechannel nsfw`".format(member))
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
