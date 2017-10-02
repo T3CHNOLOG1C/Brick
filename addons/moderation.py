@@ -237,7 +237,6 @@ class Moderation:
             return await ctx.send("{} isn't banned from NSFW channels!".format(member))
 
         try:
-            await member.add_roles(self.bot.nsfw_role, reason="Unbanned from the NSFW channels by {}.".format(ctx.message.author))
             await member.remove_roles(self.bot.no_nsfw_role, reason="Unbanned from the NSFW channels by {}.".format(ctx.message.author))
             await ctx.send("Unbanned {} from the NSFW channels.".format(member))
             try:
