@@ -124,9 +124,14 @@ class Moderation:
                 ctx.message.author
                 ))
             await ctx.send("{} can no longer speak in NSFW channels!".format(member))
+            try:
+                await member.send("You have been muted from the SSS NSFW channels. You will be DM'ed when a mod unmutes you.\n**Do not ask mods to unmute you, as doing so might extend the duration of the mute!**")
+            except:
+                pass
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
         
+
     @nsfw.command(name="unmute")
     async def nsfw_unmute(self, ctx, member):
         """Allow someone to send messages in NSFW channels again (NSFW mods only)"""
@@ -148,8 +153,13 @@ class Moderation:
                 ctx.message.author
                 ))
             await ctx.send("{} can now speak again in NSFW channels!".format(member))
+            try:
+                await member.send("You have been unmuted from the SSS NSFW channels.")
+            except:
+                pass
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
+
 
     @nsfw.command(name="kick")
     async def nsfw_kick(self, ctx, member):
@@ -167,14 +177,46 @@ class Moderation:
         except IndexError:
             return await ctx.send("Please mention a user.")
 
-        if self.bot.nsfw not in member.roles:
-            return await ctx.send("{} isn't in the NSFW!".format(member))
+        if self.bot.nsfw_role not in member.roles:
+            return await ctx.send("{} isn't in the NSFW channels!".format(member))
 
         try:
             await member.remove_roles(self.bot.nsfw_role, reason="Kicked from the NSFW channels by {}.".format(
                 ctx.message.author
                 ))
             await ctx.send("Kicked {} from the NSFW channels. They can rejoin whenever with `.togglechannel nsfw`".format(member))
+            try:
+                await member.send("You have been kicked from the SSS NSFW channels.\nYou can join the channels back whenever you want with the ´.togglechannel` command.")
+            except:
+                pass
+        except discord.errors.Forbidden:
+            await ctx.send("💢 I dont have permission to do this.")
+
+
+    @nsfw.command(name="ban")
+    async def nsfw_ban(self, ctx, member):
+        """Ban someone from the NSFW channels."""
+
+        has_perms = await self.checkNsfwModPerms(ctx)
+        if not has_perms:
+            return
+
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            return await ctx.send("Please mention a user.")
+
+        if self.bot.no_nsfw_role in member.roles:
+            return await ctx.send("{} is already banned from NSFW channels!".format(member))
+
+        try:
+            await member.remove_roles(self.bot.nsfw_role, reason="Banned from the NSFW channels by {}.".format(ctx.message.author))
+            await member.add_roles(self.bot.no_nsfw_role, reason="Banned from the NSFW channels by {}.".format(ctx.message.author))
+            await ctx.send("Banned {} from the NSFW channels.".format(member))
+            try:
+                await member.send("You have been banned from the SSS NSFW channels.\nThis ban does not expire.")
+            except:
+                pass
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 
