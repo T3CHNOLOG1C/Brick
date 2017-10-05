@@ -161,7 +161,7 @@ class Online:
         elif term.lower() == "are you":
             return await ctx.send("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
         elif term.lower() == "derek":
-            derek = await self.bot.get_user_info(" ")
+            derek = await self.bot.get_user_info("338166024446803968")
             try:
                 embed = discord.Embed(title="Derek")
                 embed.set_thumbnail(url=derek.avatar_url)
