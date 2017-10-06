@@ -160,6 +160,15 @@ class Online:
                 await ctx.send("**__T3CHNOLOG1C :__**\n\nThe cancerous retard that runs this server.")
         elif term.lower() == "are you":
             return await ctx.send("View my source code here: https://github.com/T3CHNOLOG1C/Brick")
+        elif term.lower() == "derek":
+            derek = await self.bot.get_user_info("338166024446803968")
+            try:
+                embed = discord.Embed(title="Derek")
+                embed.set_thumbnail(url=derek.avatar_url)
+                embed.description = "Super sexy compiling man."
+                await ctx.send(embed=embed)
+            except discord.errors.Forbidden:
+                await ctx.send("**__Derek :__**\n\nSuper sexy compiling man.")
 
         else:
             exception = False
