@@ -115,7 +115,7 @@ class Moderation:
             except ValueError:
                 return await ctx.send("Please mention a user.")
 
-        if self.bot.staff_role in member.roles and not self.bot.owner_role in author:
+        if self.bot.staff_role in member.roles and not self.bot.owner_role in author.roles:
             return await ctx.send("You cannot warn other staff members!")
         elif self.bot.owner_role in member.roles:
             return await ctx.send("💢 I don't have the permission to do that!")
