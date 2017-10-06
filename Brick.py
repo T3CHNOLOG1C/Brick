@@ -21,6 +21,9 @@ os.makedirs("database", exist_ok=True)
 if not os.path.isfile("database/github_releases.json"):
     with open("database/github_releases.json", "w") as f:
         f.write("{}")
+if not os.path.isfile("database/warns.json"):
+    with open("database/warns.json", "w") as f:
+        f.write("{}")
 
 bot_prefix = ["sudo ", "."]
 bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.", max_messages=10000)
@@ -42,22 +45,13 @@ async def on_command_error(ctx, error):
         formatter = commands.formatter.HelpFormatter()
         msg = await formatter.format_help_for(ctx, ctx.command)
         await ctx.send("{} You are missing required arguments.\n{}".format(ctx.message.author.mention, msg[0]))
-    elif isinstance(error, commands.errors.CommandOnCooldown):
-        try:
-            await ctx.message.delete()
-        except discord.errors.NotFound:
-            pass
-        message = await ctx.send("{} This command was used {:.2f}s ago and is on cooldown. Try again in {:.2f}s.".format(ctx.message.author.mention, error.cooldown.per - error.retry_after, error.retry_after))
-        await asyncio.sleep(10)
-        await ctx.message.delete()
     else:
         await ctx.send("An error occured while processing the `{}` command.".format(ctx.command.name))
         print('Ignoring exception in command {0.command} in {0.message.channel}'.format(ctx))
-        mods_msg = "Exception occured in `{0.command}` in {0.message.channel.mention}".format(ctx)
-        # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        botdev_msg = "Exception occured in `{0.command}` in {0.message.channel.mention}".format(ctx)
         tb = traceback.format_exception(type(error), error, error.__traceback__)
         print(''.join(tb))
-        await ctx.send(mods_msg + '\n```' + ''.join(tb) + '\n```')
+        await bot.botdev_channel.send(botdev_msg + '\n```' + ''.join(tb) + '\n```')
 
 
 @bot.event
@@ -65,12 +59,12 @@ async def on_error(ctx, event_method, *args, **kwargs):
     if isinstance(args[0], commands.errors.CommandNotFound):
         return
     print('Ignoring exception in {}'.format(event_method))
-    mods_msg = "Exception occured in {}".format(event_method)
+    botdev_msg = "Exception occured in {}".format(event_method)
     tb = traceback.format_exc()
     print(''.join(tb))
-    mods_msg += '\n```' + ''.join(tb) + '\n```'
-    mods_msg += '\nargs: `{}`\n\nkwargs: `{}`'.format(args, kwargs)
-    await ctx.send(mods_msg)
+    botdev_msg += '\n```' + ''.join(tb) + '\n```'
+    botdev_msg += '\nargs: `{}`\n\nkwargs: `{}`'.format(args, kwargs)
+    await bot.botdev_channel.send(botdev_msg)
     print(args)
     print(kwargs)
 
@@ -84,6 +78,7 @@ async def on_ready():
     # Roles
 
     bot.owner_role = discord.utils.get(guild.roles, name="Owner")
+    bot.staff_role = discord.utils.get(guild.roles, name="Staff")
     bot.botdev_role = discord.utils.get(guild.roles, name="#botdev")
     bot.nsfw_mod_role = discord.utils.get(guild.roles, name="NSFW Mod")
     bot.nsfw_role = discord.utils.get(guild.roles, name="nsfw")
