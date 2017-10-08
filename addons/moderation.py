@@ -356,7 +356,7 @@ class Moderation:
         try:
             await member.remove_roles(self.bot.no_nsfw_role, reason="Unbanned from the NSFW channels by {}.".format(ctx.message.author))
             await ctx.send("Unbanned {} from the NSFW channels.".format(member))
-            self.dm(member, "You have been unbanned from the SSS NSFW channels.")
+            await self.dm(member, "You have been unbanned from the SSS NSFW channels.")
         except discord.errors.Forbidden:
             await ctx.send("💢 I dont have permission to do this.")
 def setup(bot):
