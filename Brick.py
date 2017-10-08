@@ -91,7 +91,11 @@ async def on_ready():
     bot.botdev_channel = discord.utils.get(guild.channels, name="botdev")
     bot.brickdms_channel = discord.utils.get(guild.channels, name="brick-dms")
     bot.logs_channel = discord.utils.get(guild.channels, name="admin-logs")
-    bot.nsfw_channels = discord.utils.get(guild.channels, name="nsfw")
+
+    # Categories
+    bot.nsfw_channels = discord.utils.get(guild.categories, name="nsfw")
+    bot.staff_channels = discord.utils.get(guild.categories, name="staff")
+
 
     # Load addons
     addons = [

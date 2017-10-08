@@ -130,7 +130,7 @@ class Online:
             return await ctx.send("Request is too long!")
 
         if term.lower() == "kai" or term.lower() == "mitchy":
-            kai = await self.bot.get_user_info("272908611255271425")
+            kai = await self.bot.get_user_info(272908611255271425)
             try:
                 embed = discord.Embed(title="Kai", colour=discord.Color.blue())
                 embed.set_thumbnail(url=kai.avatar_url)

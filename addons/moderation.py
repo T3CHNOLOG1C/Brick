@@ -92,6 +92,8 @@ class Moderation:
             except discord.errors.Forbidden:
                 await ctx.send("💢 Couldn't ban {}".format(member))
 
+    # WARN STUFF
+
     @commands.has_permissions(administrator=True)
     @commands.command()
     async def warn(self, ctx, member, *, reason):
@@ -109,11 +111,7 @@ class Moderation:
         try:
             member = ctx.message.mentions[0]
         except IndexError:
-            try:
-                member = int(member)
-                by_id = True
-            except ValueError:
-                return await ctx.send("Please mention a user.")
+            return await ctx.send("Please mention a user.")
 
         if self.bot.staff_role in member.roles and not self.bot.owner_role in author.roles:
             return await ctx.send("You cannot warn other staff members!")
@@ -164,6 +162,46 @@ class Moderation:
 
         with open("database/warns.json", "w") as f:
             json.dump(js, f, indent=2, separators=(',', ':'))
+
+    @commands.command()
+    async def listwarns(self, ctx):
+        """
+        List your own warns or someone else's warns.
+        Only the staff can view someone else's warns
+        """
+
+        try:
+            member = ctx.message.mentions[0]
+            if self.bot.staff_role in ctx.message.author.roles:
+                has_perms = True
+            else:
+                has_perms = False
+        except IndexError:
+            member = ctx.message.author
+            has_perms = True
+        if not has_perms:
+            return await ctx.send("{} You don't have permission to list other member's warns!".format(ctx.message.author.mention))
+
+        with open("database/warns.json", "r") as f:
+            js = json.load(f)
+        
+        id = str(member.id)
+        if id not in js:
+            return await ctx.send("No warns found!")
+        
+        embed = discord.Embed(color=member.colour)
+        embed.set_author(name="List of warns for {} :".format(member), icon_url=member.avatar_url)
+
+        for nbr, warn in enumerate(js[id]["warns"]):
+            content = "{}".format(warn["reason"])
+            if ctx.message.channel in self.bot.staff_channels.channels:
+                author = await self.bot.get_user_info(warn["author_id"])
+                content += "\n*Warn author : {} ({})*".format(warn["author"], author.mention)
+            embed.add_field(name="\n\n#{}: {}".format(nbr + 1, warn["timestamp"]), value=content, inline=False)
+        
+        await ctx.send("", embed=embed)
+
+
 
     # NSFW-MODERATION COMMANDS
 
