@@ -8,7 +8,7 @@ The New Shack Secret Service Discord Bot
 
 ### How to use :
 
-Fill the blank fields in config.ini and run `run.sh`
+Fill the blank fields in config.ini and run `Brick.py`
 
 ## Credits
 
