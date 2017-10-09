@@ -200,7 +200,24 @@ class Moderation:
             embed.add_field(name="\n\n#{}: {}".format(nbr + 1, warn["timestamp"]), value=content, inline=False)
         
         await ctx.send("", embed=embed)
+ 
+    @commands.has_permissions(administrator=True)
+    @commands.command()
+    async def clearwarns(self, ctx, member):
+        """Clear all of someone's warns. (Staff only)"""
+        try:
+            member = ctx.message.mentions[0]
+        except IndexError:
+            return await ctx.send("Please mention a user.")
 
+        with open("database/warns.json", "r") as f:
+            js = json.load(f)
+
+        try:
+            js.pop(str(member.id))
+            await ctx.send("Cleared all of {}'s warns!".format(member.mention))
+        except KeyError:
+            return await ctx.send("This user doesn't have any warns!")
 
 
     # NSFW-MODERATION COMMANDS
