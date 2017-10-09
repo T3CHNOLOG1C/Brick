@@ -216,7 +216,7 @@ class Moderation:
         try:
             js.pop(str(member.id))
             await ctx.send("Cleared all of {}'s warns!".format(member.mention))
-            with open("database/warns.json") as f:
+            with open("database/warns.json", "w") as f:
                 json.dump(js, f, indent=2, separators=(',', ':'))
         except KeyError:
             return await ctx.send("This user doesn't have any warns!")
