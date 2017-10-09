@@ -46,7 +46,7 @@ class Misc:
 
         if self.bot.mcubrick_role in user.roles:
             try:
-                return await user.send("{} This channel doesn't exist!") # (͡° ͜ʖ ͡°)
+                return await user.send("This channel doesn't exist!") # (͡° ͜ʖ ͡°)
             except:
                 pass
         
@@ -59,12 +59,8 @@ class Misc:
 
             if self.bot.nsfw_role in user.roles:
                 await user.remove_roles(self.bot.nsfw_role)
-                '''await self.bot.nsfw_channel.send("{} left this channel.".format(user.mention))'''
             else:
                 await user.add_roles(self.bot.nsfw_role)                                             
-                '''await self.bot.nsfw_channel.send("{} joined this channel.".format(user.mention))'''
-
-
     @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def clear(self, ctx, amount):
