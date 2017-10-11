@@ -60,7 +60,17 @@ class Misc:
             if self.bot.nsfw_role in user.roles:
                 await user.remove_roles(self.bot.nsfw_role)
             else:
-                await user.add_roles(self.bot.nsfw_role)                                             
+                await user.add_roles(self.bot.nsfw_role)
+        elif channel == "multilingual":
+            if self.bot.polyglot_role in user.roles:
+                await user.remove_roles(self.bot.polyglot_role)
+            else:
+                await user.add_roles(self.bot.polyglot_role)
+                try:
+                    await user.send("Welcome to <#367766453270872064>! Please read the pinned rules before starting to chat in this channel. Thank you!")
+                except:
+                    pass
+
     @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def clear(self, ctx, amount):
