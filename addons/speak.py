@@ -19,17 +19,33 @@ class Speak:
             channel = ctx.message.channel_mentions[0]
             await channel.send(message)
 
+    async def memberDM(self, member, message):
+        try:
+            message = "{} {}".format(message, ' '.join([attachment.url for attachment in message.attachments]))
+            if len(message) > 2000:
+                await member.send(message[:2000])
+                await member.send(message[2000:])
+            else:
+                await member.send(msg)
+        except discord.errors.Forbidden:
+            await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
+
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def dm(self, ctx, message, *, mentions):
-        """DM mentionned users. (Staff Only)
-        Message has to be between quotes."""
+    async def dm(self, ctx, member, *, message):
+        """DM a user. (Staff Only)"""
+        await ctx.message.delete()
+        member = ctx.message.mentions[0]
+        await self.memberDM(member, message)
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(pass_context=True)
+    async def multidm(self, ctx, message, *, mentions):
+        """DM multiple users. (Staff Only)
+        Message has to be between quotes, and before the mentions."""
         await ctx.message.delete()
         for member in ctx.message.mentions:
-            try:
-                await member.send(message)
-            except discord.errors.Forbidden:
-                await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
+            await self.memberDM(member, message)
     
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
@@ -38,14 +54,14 @@ class Speak:
         await ctx.message.delete()
         async for m in self.bot.brickdms_channel.history(limit=250):
                 try:
-                    member = m.mentions[0]
-                    break
+                    if ctx.message.author == self.bot.user:
+                        member = m.mentions[0]
+                        break
+                    else:
+                        continue
                 except IndexError:
                     continue
-        try:
-            await member.send(message)
-        except:
-            await ctx.send("Couldn't answer to the latest dm.")
+        await self.memberDM(member, message)
 
 def setup(bot):
     bot.add_cog(Speak(bot))
