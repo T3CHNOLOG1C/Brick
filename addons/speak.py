@@ -38,9 +38,8 @@ class Speak:
             if ctx.message.attachments:
                 attachment_urls = []
                 for attachment in ctx.message.attachments:
-                    attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
+                    attachment_urls.append('{}'.format(attachment.url))
                     message = "{} {}".format(message, attachment_urls)
-            await ctx.send("Complete!")
             if len(message) > 2000:
                 await found_member.send(message[:2000])
                 await found_member.send(message[2000:])
@@ -51,7 +50,7 @@ class Speak:
 
     # @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def dm(self, ctx, member, *, message):
+    async def dm(self, ctx, member, *, message=""):
         """DM a user. (Staff Only)"""
         await ctx.message.delete()
         found_member = self.find_user(member, ctx)
@@ -59,7 +58,7 @@ class Speak:
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def multidm(self, ctx, message, *, mentions):
+    async def multidm(self, ctx, message="", *, mentions):
         """DM multiple users. (Staff Only)
         Message has to be between quotes, and before the mentions."""
         await ctx.message.delete()
