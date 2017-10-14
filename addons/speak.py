@@ -48,7 +48,7 @@ class Speak:
         except discord.errors.Forbidden:
             await self.bot.logs_channel.send("Couldn't send message to {}.".format(found_member.mention))
 
-    # @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
     async def dm(self, ctx, member, *, message=""):
         """DM a user. (Staff Only)"""
@@ -58,7 +58,7 @@ class Speak:
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def multidm(self, ctx, message="", *, mentions):
+    async def multidm(self, ctx, *, mentions, message=""):
         """DM multiple users. (Staff Only)
         Message has to be between quotes, and before the mentions."""
         await ctx.message.delete()
