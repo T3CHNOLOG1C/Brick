@@ -21,9 +21,9 @@ class Speak:
 
     async def memberDM(self, member, message):
         try:
-            if message.attachments:
+            if ctx.message.attachments:
                 attachment_urls = []
-            for attachment in message.attachments:
+            for attachment in ctx.message.attachments:
                 attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
             message = "{} {}".format(message, attachment_urls)
             if len(message) > 2000:
