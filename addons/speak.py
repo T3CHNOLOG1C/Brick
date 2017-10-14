@@ -26,13 +26,14 @@ class Speak:
             for attachment in ctx.message.attachments:
                 attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
             message = "{} {}".format(message, attachment_urls)
-            if len(message) > 2000:
+            return message
+            '''if len(message) > 2000:
                 await member.send(message[:2000])
                 await member.send(message[2000:])
             else:
                 await member.send(msg)
         except discord.errors.Forbidden:
-            await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
+            await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))'''
 
     # @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
