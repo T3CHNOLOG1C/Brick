@@ -62,8 +62,10 @@ class Speak:
         """DM multiple users. (Staff Only)
         Message and members need to be in quotes, each"""
         await ctx.message.delete()
-        for members in member:
-            found_member = self.find_user(members, ctx)
+        members = ""
+        for users in member:
+            members += found_member = self.find_user(member, ctx)
+        for user in members:
             await self.memberDM(ctx, found_member, message)
     
     @commands.has_permissions(administrator=True)
