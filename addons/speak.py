@@ -64,7 +64,7 @@ class Speak:
         members = ""
         for users in member:
             found_member = self.find_user(member, ctx)
-            members += found_member
+            members += str(found_member)
         for user in members:
             await self.memberDM(ctx, found_member, message)
     
