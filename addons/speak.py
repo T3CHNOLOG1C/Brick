@@ -58,11 +58,11 @@ class Speak:
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def multidm(self, ctx, *, mentions, message=""):
+    async def multidm(self, ctx, *, member, message=""):
         """DM multiple users. (Staff Only)
-        Message has to be between quotes, and before the mentions."""
+        Message and members need to be in quotes, each"""
         await ctx.message.delete()
-        for members in ctx.message.mentions:
+        for members in member:
             found_member = self.find_user(member, ctx)
             await self.memberDM(found_member, message)
     
