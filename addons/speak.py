@@ -19,7 +19,7 @@ class Speak:
             channel = ctx.message.channel_mentions[0]
             await channel.send(message)
 
-    async def memberDM(self, member, message):
+    async def memberDM(self, ctx, member, message):
         try:
             if ctx.message.attachments:
                 attachment_urls = []
