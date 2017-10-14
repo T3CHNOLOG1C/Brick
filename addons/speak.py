@@ -21,7 +21,11 @@ class Speak:
 
     async def memberDM(self, member, message):
         try:
-            message = "{} {}".format(message, ' '.join([attachment.url for attachment in message.attachments]))
+            if message.attachments:
+                attachment_urls = []
+            for attachment in message.attachments:
+                attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
+            message = "{} {}".format(message, attachment_urls)
             if len(message) > 2000:
                 await member.send(message[:2000])
                 await member.send(message[2000:])
