@@ -52,7 +52,6 @@ class Speak:
     @commands.command(pass_context=True)
     async def dm(self, ctx, member, *, message=""):
         """DM a user. (Staff Only)"""
-        await ctx.message.delete()
         found_member = self.find_user(member, ctx)
         await self.memberDM(ctx, found_member, message)
 
@@ -61,10 +60,10 @@ class Speak:
     async def multidm(self, ctx, *, member, message=""):
         """DM multiple users. (Staff Only)
         Message and members need to be in quotes, each"""
-        await ctx.message.delete()
         members = ""
         for users in member:
-            members += found_member = self.find_user(member, ctx)
+            found_member = self.find_user(member, ctx)
+            members += found_member
         for user in members:
             await self.memberDM(ctx, found_member, message)
     
