@@ -34,7 +34,7 @@ class Speak:
         except discord.errors.Forbidden:
             await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
 
-    @commands.has_permissions(administrator=True)
+    # @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
     async def dm(self, ctx, member, *, message):
         """DM a user. (Staff Only)"""
