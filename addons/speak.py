@@ -23,8 +23,8 @@ class Speak:
         try:
             if ctx.message.attachments:
                 attachment_urls = []
-            for attachment in ctx.message.attachments:
-                attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
+                for attachment in ctx.message.attachments:
+                    attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
             message = "{} {}".format(message, attachment_urls)
             await ctx.send("Complete!")
             return message
