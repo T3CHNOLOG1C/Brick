@@ -45,6 +45,7 @@ class Speak:
                 await found_member.send(message[2000:])
             else:
                 await found_member.send(message)
+            await ctx.send("Successfully sent a message to {}!".format(found_member))
         except discord.errors.Forbidden:
             await self.bot.logs_channel.send("Couldn't send message to {}.".format(found_member.mention))
 
