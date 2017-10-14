@@ -39,7 +39,7 @@ class Speak:
                 attachment_urls = []
                 for attachment in ctx.message.attachments:
                     attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
-            message = "{} {}".format(message, attachment_urls)
+                    message = "{} {}".format(message, attachment_urls)
             await ctx.send("Complete!")
             return message
             if len(message) > 2000:
