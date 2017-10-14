@@ -41,7 +41,6 @@ class Speak:
                     attachment_urls.append('[{}]({})'.format(attachment.filename, attachment.url))
                     message = "{} {}".format(message, attachment_urls)
             await ctx.send("Complete!")
-            return message
             if len(message) > 2000:
                 await found_member.send(message[:2000])
                 await found_member.send(message[2000:])
