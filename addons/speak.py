@@ -33,8 +33,8 @@ class Speak:
                 await member.send(message[2000:])
             else:
                 await member.send(msg)
-        except discord.errors.Forbidden:
-            await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))'''
+        except discord.errors.Forbidden:'''
+            await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
 
     # @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
