@@ -38,7 +38,7 @@ class Speak:
             if ctx.message.attachments:
                 attachments = ""
                 for attachment in ctx.message.attachments:
-                    attachments.append('{} '.format(attachment.url))
+                    attachments += '{} '.format(attachment.url)
                 message = "{} {}".format(message, attachments)
             if len(message) > 2000:
                 await found_member.send(message[:2000])
