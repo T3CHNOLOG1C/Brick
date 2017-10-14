@@ -63,8 +63,8 @@ class Speak:
         Message and members need to be in quotes, each"""
         await ctx.message.delete()
         for members in member:
-            found_member = self.find_user(member, ctx)
-            await self.memberDM(found_member, message)
+            found_member = self.find_user(members, ctx)
+            await self.memberDM(ctx, found_member, message)
     
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
