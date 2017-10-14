@@ -36,10 +36,10 @@ class Speak:
     async def memberDM(self, ctx, found_member, message):
         try:
             if ctx.message.attachments:
-                attachment_urls = []
+                attachments = ""
                 for attachment in ctx.message.attachments:
-                    attachment_urls.append('{}'.format(attachment.url))
-                    message = "{} {}".format(message, attachment_urls)
+                    attachments.append('{} '.format(attachment.url))
+                message = "{} {}".format(message, attachments)
             if len(message) > 2000:
                 await found_member.send(message[:2000])
                 await found_member.send(message[2000:])
