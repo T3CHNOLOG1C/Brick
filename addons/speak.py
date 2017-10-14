@@ -28,11 +28,11 @@ class Speak:
             message = "{} {}".format(message, attachment_urls)
             await ctx.send("Complete!")
             return message
-            '''if len(message) > 2000:
+            if len(message) > 2000:
                 await member.send(message[:2000])
                 await member.send(message[2000:])
             else:
-                await member.send(msg)'''
+                await member.send(message)
         except discord.errors.Forbidden:
             await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
 
@@ -42,7 +42,7 @@ class Speak:
         """DM a user. (Staff Only)"""
         await ctx.message.delete()
         member = ctx.message.mentions[0]
-        await self.memberDM(member, message)
+        await self.memberDM(ctx, member, message)
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
