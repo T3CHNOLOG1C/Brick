@@ -13,5 +13,3 @@ Fill the blank fields in config.ini and run `Brick.py`
 ## Credits
 
 - Rapptz for discord.py
-- SexualRhinoceros for the music bot
-- GriffinG1's [.bot](https://github.com/GriffinG1/.bot) and Griffin for various pieces of code
