@@ -161,10 +161,10 @@ class Memes:
                 words = variant.split(',')
                 await ctx.send(
                     "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who are {} or who are dating a {}. ".format(words[0], words[1]) +
-                    "I didn't think before I spoke a word so it just came out as something totally wrong, I don't hate anybody who is {}, just the community. I like Aurora, just not the {} community. I'm sorry for all of this. All I'm asking for is a apology is all. I should have been thinking before I spoke.".format(words[2], words[3])
+                    "I didn't think before I spoke a word so it just came out as something totally wrong, I don't hate anybody who is {}, just the community. I like {}, just not the {} community. I'm sorry for all of this. All I'm asking for is a apology is all. I should have been thinking before I spoke.".format(words[2], words[3], words[4])
                 )
             except:
-                return await ctx.send("Your syntax is incorrect. Please use the following syntax : `.xkyup word1,word2,word3,word4`. You must specify the 4 words.")
+                return await ctx.send("Your syntax is incorrect. Please use the following syntax : `.xkyup \"word1,word2,word3,word4,word5\"`. You must specify the 5 words.")
 
 
     # Kurisu memes
