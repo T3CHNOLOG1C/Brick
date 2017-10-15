@@ -163,7 +163,7 @@ class Events:
 
     async def on_message(self, message):
 
-        if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms:
+        if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms and message.author.id not in self.bot.ignored_users:
             msg = self.formatMessage(message)
             if len(msg) > 2000:
                 await self.bot.brickdms_channel.send(msg[:2000])
@@ -201,7 +201,7 @@ class Events:
 
     async def on_message_edit(self, _, message):
 
-        if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms:
+        if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms and message.author.id not in self.bot.ignored_users:
             msg = self.formatMessage(message)
             if len(msg) > 2000:
                 await self.bot.brickdms_channel.send(msg[:2000])

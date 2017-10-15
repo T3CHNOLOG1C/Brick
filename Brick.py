@@ -4,6 +4,8 @@ import os
 import configparser
 import asyncio
 import traceback
+import json
+import copy
 from subprocess import call
 from os import execv
 from sys import argv
@@ -20,10 +22,13 @@ os.chdir(path)
 os.makedirs("database", exist_ok=True)
 if not os.path.isfile("database/github_releases.json"):
     with open("database/github_releases.json", "w") as f:
-        f.write("{}")
+        f.write('{}')
 if not os.path.isfile("database/warns.json"):
     with open("database/warns.json", "w") as f:
-        f.write("{}")
+        f.write('{}')
+if not os.path.isfile("database/ignored_users.json"):
+    with open("database/ignored_users.json", "w") as f:
+        f.write('{"users": []}')
 
 bot_prefix = ["sudo ", "."]
 bot = commands.Bot(command_prefix=bot_prefix, description="Brick, the New Secret Shack Service bot.", max_messages=10000)
@@ -98,6 +103,12 @@ async def on_ready():
     bot.staff_channels = discord.utils.get(guild.categories, name="staff")
 
 
+    # Ignored users
+    with open("database/ignored_users.json", "r") as f:
+        ignored_users = json.load(f)["users"]
+    bot.ignored_users = ignored_users
+
+
     # Load addons
     addons = [
         'addons.memes',
@@ -115,6 +126,7 @@ async def on_ready():
         except Exception as e:
             print("Failed to load {} :\n{} : {}".format(addon, type(e).__name__, e))
 
+    bot.all_ready = True
 
     print("Client logged in as {}, in the following guild : {}".format(bot.user.name, guild.name))
     
