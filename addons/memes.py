@@ -158,6 +158,7 @@ class Memes:
         
         else:
             try:
+		variant = variant.replace('@everyone', '`@`everyone').replace('@here', '`@`here')
                 words = variant.split(',')
                 await ctx.send(
                     "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who are {} or who are dating a {}. ".format(words[0], words[1]) +
