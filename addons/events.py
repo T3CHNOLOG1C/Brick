@@ -210,13 +210,13 @@ class Events:
                 await self.bot.brickdms_channel.send(msg)
                 
         elif old.content != message.content:
-            embed = discord.Embed(description=f"{message.author.mention} has edited their message!")
+            embed = discord.Embed(description=f"{message.author.mention} has edited their message in <#{message.channel.id}>!")
             embed.add_field(name="Old", value=old.content, inline=False)
             embed.add_field(name="New", value=message.content, inline=False)
             await self.bot.logs_channel.send(embed=embed)
             
     async def on_message_delete(self, message):
-        embed = discord.Embed(description=f"{message.author.mention} has deleted their message!")
+        embed = discord.Embed(description=f"{message.author.mention} has deleted their message in <#{message.channel.id}>!")
         embed.add_field(name="Message", value=message.content, inline=False)
         await self.bot.logs_channel.send(embed=embed)
 
