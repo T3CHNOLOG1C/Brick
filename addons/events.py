@@ -217,7 +217,7 @@ class Events:
             
     async def on_message_delete(self, message):
         embed = discord.Embed(description=f"{message.author.mention} has deleted their message!")
-        embed.-add_field(name="Message", value=message.content, inline=False)
+        embed.add_field(name="Message", value=message.content, inline=False)
         await self.bot.logs_channel.send(embed=embed)
 
 def setup(bot): 
