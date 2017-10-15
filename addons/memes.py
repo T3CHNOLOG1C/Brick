@@ -91,7 +91,9 @@ class Memes:
         """
         MEMES???
         This meme has multiple variants : fr, es, it, jp, de, pl, pt, nl, se, bees
-        You can also specify your own variant, and it will automatically generate a copypasta
+        You can also specify your own variant, and it will automatically generate a copypasta:
+        I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who {} or who are dating {}.
+        I didn't think before I spoke a word so it just came out as something totally wrong, I don't hate anybody who is {}, just the community. I like {}, just not the {} community. I'm sorry for all of this. All I'm asking for is a apology is all. I should have been thinking before I spoke."
         """
         if variant == "":
             await ctx.send(
@@ -161,7 +163,7 @@ class Memes:
                 variant = variant.replace('@everyone', '`@`everyone').replace('@here', '`@`here')
                 words = variant.split(',')
                 await ctx.send(
-                    "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who are {} or who are dating a {}. ".format(words[0], words[1]) +
+                    "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who {} or who are dating {}. ".format(words[0], words[1]) +
                     "I didn't think before I spoke a word so it just came out as something totally wrong, I don't hate anybody who is {}, just the community. I like {}, just not the {} community. I'm sorry for all of this. All I'm asking for is a apology is all. I should have been thinking before I spoke.".format(words[2], words[3], words[4])
                 )
             except:
