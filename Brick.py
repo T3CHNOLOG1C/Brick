@@ -50,6 +50,14 @@ async def on_command_error(ctx, error):
         formatter = commands.formatter.HelpFormatter()
         msg = await formatter.format_help_for(ctx, ctx.command)
         await ctx.send("{} You are missing required arguments.\n{}".format(ctx.message.author.mention, msg[0]))
+    elif isinstance(error, commands.errors.CommandOnCooldown):
+        try:
+            await ctx.message.delete()
+        except discord.errors.NotFound:
+            pass
+        message = await ctx.message.channel.send("{} This command was used {:.2f}s ago and is on cooldown. Try again in {:.2f}s.".format(ctx.message.author.mention, error.cooldown.per - error.retry_after, error.retry_after))
+        await asyncio.sleep(10)
+        await message.delete()
     else:
         await ctx.send("An error occured while processing the `{}` command.".format(ctx.command.name))
         print('Ignoring exception in command {0.command} in {0.message.channel}'.format(ctx))
