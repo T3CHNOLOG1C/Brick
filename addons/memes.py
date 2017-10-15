@@ -131,8 +131,8 @@ class Memes:
         
         elif variant == "pl":
             await ctx.send(
-                "Bardzo mi przykro, bylem jebanym idiota gdy wypowiedzialem te slowa i nie zdawalem sobie sprawy z tego jak bardzo naprzykrze sie osoba transseksualnym lubtez tym ktorzy chodza z osobami transseksualnymi. Nie myslalem gdy wypowiedzialem te slowa und to co wyszlo z moich ust bylo przykre i zle. Nie nie nawidze osob trans, tylko ich spolecznosc. " +
-                "Lubie osoby trans, nie lubie tylko ich spolecznosci. Bardzo mi za to wszystko przykro. Prosze o przebaczenie. Powinienem byl pomyslem zanim otworzylem usta."
+                "Bardzo mi przykro, byłem jebanym idiotą gdy wypowiedziałem te słowa i nie zdawałem sobie sprawy z tego jak bardzo naprzykrze sie osobom transseksualnym lub tym którzy chodzą z transseksualistami. Nie myślałem gdy wypowiedziałem te słowa i to co wyszło z moich ust było smutne i nieprawidłowe. Nic nie mam do osób trans, tylko do ich społeczności " +
+                " Lubie osoby trans, nie lubie tylko ich społeczności. Bardzo mi za to wszystko przykro. Proszę o przebaczenie. Powinienem był pomyśleć zanim cokolwiek napisałem."
             )
 
         elif variant == "pt":
