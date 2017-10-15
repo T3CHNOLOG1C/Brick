@@ -10,19 +10,6 @@ class Speak:
         self.bot = bot
         print("{} addon loaded.".format(self.__class__.__name__))
         
-    def find_user(self, user, ctx):
-        found_member = self.bot.guild.get_member(user)
-        if not found_member:
-            found_member = self.bot.guild.get_member_named(user)
-        if not found_member:
-            try:
-                found_member = ctx.message.mentions[0]
-            except IndexError:
-                pass
-        if not found_member:
-            return None
-        else:
-            return found_member
 
     @commands.has_permissions(manage_messages=True)
     @commands.command(pass_context=True)
@@ -33,56 +20,45 @@ class Speak:
             channel = ctx.message.channel_mentions[0]
             await channel.send(message)
 
-    async def memberDM(self, ctx, found_member, message):
+    async def memberDM(self, ctx, member, message):
         try:
-            if ctx.message.attachments:
-                attachments = ""
-                for attachment in ctx.message.attachments:
-                    attachments += '{} '.format(attachment.url)
+            if len(ctx.message.attachments) > 0:
+                attachments = " ".join(attachment.url for attachment in ctx.message.attachments)
                 message = "{} {}".format(message, attachments)
-            if len(message) > 2000:
-                await found_member.send(message[:2000])
-                await found_member.send(message[2000:])
             else:
-                await found_member.send(message)
-            await ctx.send("Successfully sent a message to {}!".format(found_member))
+                if message == '':
+                    return await ctx.send("You cannot send empty messages!")
+                else:
+                    await ctx.message.delete()
+            if len(message) > 2000:
+                await member.send(message[:2000])
+                await member.send(message[2000:])
+            else:
+                await member.send(message)
         except discord.errors.Forbidden:
-            await self.bot.logs_channel.send("Couldn't send message to {}.".format(found_member.mention))
+            await self.bot.logs_channel.send("Couldn't send message to {}.".format(member.mention))
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def dm(self, ctx, member, *, message=""):
+    async def dm(self, ctx, member, *, message=''):
         """DM a user. (Staff Only)"""
-        found_member = self.find_user(member, ctx)
-        await self.memberDM(ctx, found_member, message)
+        member = ctx.message.mentions[0]
+        await self.memberDM(ctx, member, message)
 
     @commands.has_permissions(administrator=True)
     @commands.command(pass_context=True)
-    async def multidm(self, ctx, *, member, message=""):
-        """DM multiple users. (Staff Only)
-        Message and members need to be in quotes, each"""
-        members = ""
-        for users in member:
-            found_member = self.find_user(member, ctx)
-            members += str(found_member)
-        for user in members:
-            await self.memberDM(ctx, found_member, message)
-    
-    @commands.has_permissions(administrator=True)
-    @commands.command(pass_context=True)
-    async def answer(self, ctx, *, message):
+    async def answer(self, ctx, *, message=''):
         """Answer to the latest DM (Staff Only)"""
-        await ctx.message.delete()
         async for m in self.bot.brickdms_channel.history(limit=250):
                 try:
-                    if ctx.message.author == self.bot.user:
-                        found_member = m.mentions[0]
+                    if m.author == self.bot.user:
+                        member = m.mentions[0]
                         break
                     else:
                         continue
                 except IndexError:
                     continue
-        await self.memberDM(found_member, message)
+        await self.memberDM(ctx, member, message)
 
 def setup(bot):
     bot.add_cog(Speak(bot))

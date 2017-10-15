@@ -153,16 +153,13 @@ class Events:
 
         message_id = "Edited: {}".format(message.id) if message.edited_at else message.id
 
-        timestamp = message.edited_at if message.edited_at else message.created_at
-        timestamp = strftime('[%F %H:%M:%S]')
-
         author = message.channel.recipient.mention
 
         content = message.content
 
         attachments = ' '.join([attachment.url for attachment in message.attachments])
 
-        return("__**({})**  **{}**  **{}** {}:__\n\n{} {}".format(message_id, timestamp, "📤 To" if message.author.id == self.bot.user.id else "📥 From", author, content, attachments))
+        return("__**[{}]** **{}** {}:__\n\n{} {}".format(message_id, "📤 To" if message.author == self.bot.user else "📥 From", author, content, attachments))
 
     async def on_message(self, message):
 
@@ -173,6 +170,25 @@ class Events:
                 await self.bot.brickdms_channel.send(msg[2000:])
             else:
                 await self.bot.brickdms_channel.send(msg)
+            
+        # Delete double messages
+        elif message.channel == self.bot.brickdms_channel:      
+            i = 0
+            async for m in self.bot.brickdms_channel.history(limit=5):
+                if m.author != self.bot.user:
+                    continue
+                if i == 0:
+                    i += 1
+                    p = m.content
+                    continue
+                else:
+                    if m.content == p:
+                        await m.delete()
+                        break
+                    else:
+                        p = m.content
+                    continue
+
                       
         # auto kick on 15+ pings
         if len(message.mentions) > 15:
