@@ -199,7 +199,7 @@ class Events:
             await self.bot.logs_channel.send("{} was kicked for trying to spam ping users.".format(message.author))
             await self.bot.logs_channel.send("", embed=embed)
 
-    async def on_message_edit(self, _, message):
+    async def on_message_edit(self, old, message):
 
         if isinstance(message.channel, discord.abc.PrivateChannel) and self.receive_dms and message.author.id not in self.bot.ignored_users:
             msg = self.formatMessage(message)
@@ -208,6 +208,12 @@ class Events:
                 await self.bot.brickdms_channel.send(msg[2000:])
             else:
                 await self.bot.brickdms_channel.send(msg)
+                
+        else:
+            embed = discord.Embed(description=f"{message.author} has edited their message")
+            embed.add_field("Old", old.content)
+            embed.add_field("New", message.content)
+            await self.bot.logs_channel.send(embed=embed)
 
 def setup(bot): 
     event_cog = Events(bot)
