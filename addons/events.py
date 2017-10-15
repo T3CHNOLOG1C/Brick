@@ -209,10 +209,10 @@ class Events:
             else:
                 await self.bot.brickdms_channel.send(msg)
                 
-        else:
-            embed = discord.Embed(description=f"{message.author} has edited their message")
-            embed.add_field("Old", old.content)
-            embed.add_field("New", message.content)
+        elif old.content != message.content:
+            embed = discord.Embed(description=f"{message.author} has edited their message!")
+            embed.add_field(name="Old", value=old.content)
+            embed.add_field(name="New", value=message.content)
             await self.bot.logs_channel.send(embed=embed)
 
 def setup(bot): 
