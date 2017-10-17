@@ -43,7 +43,7 @@ class Events:
             "BernardoGiordano": "Checkpoint",
         }
         print("{} addon loaded.".format(self.__class__.__name__))
-    
+
     # Events
     new_releases_active = True
     receive_dms = True
@@ -132,7 +132,7 @@ class Events:
                             js['{}/{}'.format(owner, repo)] = [
                                 latest['updated'], latest['id']
                             ]
-                            
+
                     except KeyError:
 
                         # Entry does not exist in database yet, so we create it
@@ -147,7 +147,7 @@ class Events:
                         json.dump(js, f, indent=2, separators=(',', ':'))
 
             await asyncio.sleep(1)
-    
+
     def formatMessage(self, message):
         """Build a nicely formatted string from a message we want to log"""
 
@@ -170,9 +170,9 @@ class Events:
                 await self.bot.brickdms_channel.send(msg[2000:])
             else:
                 await self.bot.brickdms_channel.send(msg)
-            
+
         # Delete double messages
-        elif message.channel == self.bot.brickdms_channel:      
+        elif message.channel == self.bot.brickdms_channel:
             i = 0
             async for m in self.bot.brickdms_channel.history(limit=5):
                 if m.author != self.bot.user:
@@ -189,7 +189,7 @@ class Events:
                         p = m.content
                     continue
 
-                      
+
         # auto kick on 15+ pings
         if len(message.mentions) > 15:
             embed = discord.Embed(description=message.content)
@@ -208,15 +208,15 @@ class Events:
                 await self.bot.brickdms_channel.send(msg[2000:])
             else:
                 await self.bot.brickdms_channel.send(msg)
-                
+
         elif old.content != message.content:
-            embed = discord.Embed(description=f"{message.author.mention} has edited their message in <#{message.channel.id}>!")
+            embed = discord.Embed(description="{} ({}) has edited their message in <#{}> ({})!".format(message.author.mention, message.author, message.channel.id, message.channel.name))
             embed.add_field(name="Old", value=old.content, inline=False)
             embed.add_field(name="New", value=message.content, inline=False)
             await self.bot.logs_channel.send(embed=embed)
-            
+
     async def on_message_delete(self, message):
-        embed = discord.Embed(description=f"{message.author.mention} has deleted their message in <#{message.channel.id}>!")
+        embed = discord.Embed(description="{} ({}) has deleted their message in <#{}> ({})!".format(message.author.mention, message.author, message.channel.id, message.channel.name))
         embed.add_field(name="Message", value=message.content, inline=False)
         await self.bot.logs_channel.send(embed=embed)
 
