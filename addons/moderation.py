@@ -358,7 +358,7 @@ class Moderation:
 
     @nsfw.command(name="unban")
     async def nsfw_unban(self, ctx, member):
-        """Ban someone from the NSFW channels."""
+        """Unban someone from the NSFW channels."""
 
         has_perms = await self.checkNsfwModPerms(ctx)
         if not has_perms:
