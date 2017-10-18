@@ -362,6 +362,9 @@ class Memes:
 ##    @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.channel)
 ##    @commands.command()
 ##    async def dongroder(self, ctx, variant=""):
+##    """MEMES?!?
+##    This meme has multiple variants : piter, swotch.
+##    If no variant is specified, it will defautlt to piter."""
 ##        if variant == "piter":
 ##            await ctx.send(
 ##                "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who are transgender or who are dating a transgender person. " +
