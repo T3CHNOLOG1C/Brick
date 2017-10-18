@@ -356,7 +356,22 @@ class Memes:
     async def concern(self, ctx):
         """MEMES?"""
         await ctx.send("https://i.imgur.com/cWXBb5g.png")
-    
-        
+	
+## Ill finish this later
+	
+##    @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.channel)
+##    @commands.command()
+##    async def dongroder(self, ctx, variant=""):
+##        if variant == "piter":
+##            await ctx.send(
+##                "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who are transgender or who are dating a transgender person. " +
+##                "I didn't think before I spoke a word so it just came out as something totally wrong, I don't hate anybody who is transgender, just the community. I like Aurora, just not the trans community. I'm sorry for all of this. All I'm asking for is a apology is all. I should have been thinking before I spoke."
+##            )
+##        elif variant == "swotch":
+##            await ctx.send(
+##                "I'm so sorry, I was a fucking retard for saying words that would get me in touble and anger lots of people who are bees or who are dating a bee. I didn't think before I spoke a word so it just came out as something totally wrong, I don't hate anybody who is a bee, just the hive. " +
+##                "I like bees, just not the beehive. I'm sorry for all of this. All I'm asking for is a apology is all. I should have been thinking before I spoke."
+##            )
+
 def setup(bot):
     bot.add_cog(Memes(bot))
